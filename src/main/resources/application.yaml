@@ -1,0 +1,3 @@
+spring:
+  application:
+    name: torneo_germans_bisbal_api

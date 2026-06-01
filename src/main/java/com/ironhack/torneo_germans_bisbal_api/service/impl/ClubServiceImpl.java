@@ -1,5 +1,6 @@
 package com.ironhack.torneo_germans_bisbal_api.service.impl;
 
+import com.ironhack.torneo_germans_bisbal_api.exception.ResourceNotFoundException;
 import com.ironhack.torneo_germans_bisbal_api.model.entity.Club;
 import com.ironhack.torneo_germans_bisbal_api.repository.ClubRepository;
 import com.ironhack.torneo_germans_bisbal_api.service.ClubService;
@@ -23,7 +24,7 @@ public class ClubServiceImpl implements ClubService {
     //Obtenr club por id
     public Club getClubById(Long id){
         return clubRepository.findById(id)
-                .orElseThrow(()-> new RuntimeException("Club not found wit id: " + id));
+                .orElseThrow(()-> new ResourceNotFoundException("Club not found with id: " + id));
     }
 
     //Crear un nuevo club

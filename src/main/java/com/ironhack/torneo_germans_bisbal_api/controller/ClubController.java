@@ -20,15 +20,27 @@ public class ClubController {
         return clubService.getAllClubs();
     }
 
+    //obtener club por id
+    @GetMapping("/{id}")
+    public Club getClubById(@PathVariable Long id){
+        return clubService.getClubById(id);
+    }
+
     //Añadir club ruta protegida por Admin
     @PostMapping()
     public Club createClub(@RequestBody Club club){
         return clubService.createClub(club);
     }
 
-    //obtener club por id
-    @GetMapping("/{id}")
-    public Club getClubById(@PathVariable Long id){
-        return clubService.getClubById(id);
+    //Modificar club ruta protegida por Admin
+    @PutMapping("/{id}")
+    public Club updateClub(@PathVariable Long id, @RequestBody Club club){
+        return clubService.updateClub(id, club);
+    }
+
+    //Eliminar club ruta protegida por Admin
+    @DeleteMapping("/{id}")
+    public void deleteClub(@PathVariable Long id){
+        clubService.deleteClub(id);
     }
 }

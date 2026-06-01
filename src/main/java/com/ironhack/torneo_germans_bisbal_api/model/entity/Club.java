@@ -21,7 +21,9 @@ public class Club {
 
     private String name;
 
-    private String City;
+    private String city;
 
-    private String Country;
+    private String country;
+
+    private String logoUrl;
 }

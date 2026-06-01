@@ -72,6 +72,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/greet").permitAll()
                         .requestMatchers("/api/greet/personal").hasAnyAuthority("ROLE_USER")
                         .requestMatchers(GET, "/api/users").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+                        .requestMatchers(GET, "/api/clubs/**").permitAll()
+                        .requestMatchers(POST, "/api/clubs/**").hasAnyAuthority("ROLE_ADMIN")
                         .requestMatchers(POST, "/api/users").hasAnyAuthority("ROLE_ADMIN")
                         .requestMatchers(POST, "/api/roles").hasAnyAuthority("ROLE_ADMIN")
                         .requestMatchers(POST, "/api/roles/add-to-user").hasAnyAuthority("ROLE_ADMIN")

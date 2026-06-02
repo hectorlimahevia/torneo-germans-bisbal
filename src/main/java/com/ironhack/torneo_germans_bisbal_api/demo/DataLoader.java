@@ -59,7 +59,7 @@ public class DataLoader implements CommandLineRunner {
                 "Barça Rugby",
                 "Barcelona",
                 "Spain",
-                null
+                 "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSsjavn6dgnDe75jfE0gdR7hc48s4nnqk7CNg&s"
         ));
 
         Club geieg = clubRepository.save(new Club(
@@ -67,7 +67,7 @@ public class DataLoader implements CommandLineRunner {
                 "GEiEG",
                 "Girona",
                 "Spain",
-                null
+                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSLjGMXpfNLlZoP4uwY2KV8A-GAO7c12sBpRA&s"
         ));
 
         // FIELDS

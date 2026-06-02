@@ -1,7 +1,7 @@
 package com.ironhack.torneo_germans_bisbal_api.model.enums;
 
 public enum MatchStatus {
-    SHEDULED,
+    SCHEDULED,
     IN_PROGRESS,
     FINISHED,
     CANCELLED

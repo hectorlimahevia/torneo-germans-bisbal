@@ -88,6 +88,11 @@ public class SecurityConfig {
                         .requestMatchers(PUT, "/api/teams/**").hasAnyAuthority("ROLE_ADMIN")
                         .requestMatchers(DELETE, "/api/teams/**").hasAnyAuthority("ROLE_ADMIN")
 
+                        .requestMatchers(GET, "/api/matches/**").permitAll()
+                        .requestMatchers(POST, "/api/matches/**").hasAnyAuthority("ROLE_ADMIN")
+                        .requestMatchers(PUT, "/api/matches/**").hasAnyAuthority("ROLE_ADMIN")
+                        .requestMatchers(DELETE, "/api/matches/**").hasAnyAuthority("ROLE_ADMIN")
+
                         .requestMatchers(POST, "/api/users").hasAnyAuthority("ROLE_ADMIN")
                         .requestMatchers(POST, "/api/roles").hasAnyAuthority("ROLE_ADMIN")
                         .requestMatchers(POST, "/api/roles/add-to-user").hasAnyAuthority("ROLE_ADMIN")

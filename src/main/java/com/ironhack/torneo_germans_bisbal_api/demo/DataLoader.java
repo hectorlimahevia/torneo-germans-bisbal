@@ -14,6 +14,12 @@ import com.ironhack.torneo_germans_bisbal_api.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+import com.ironhack.torneo_germans_bisbal_api.model.entity.Match;
+import com.ironhack.torneo_germans_bisbal_api.model.enums.MatchStatus;
+import com.ironhack.torneo_germans_bisbal_api.repository.MatchRepository;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Component
 @RequiredArgsConstructor
@@ -25,6 +31,7 @@ public class DataLoader implements CommandLineRunner {
     private final ClubRepository clubRepository;
     private final FieldRepository fieldRepository;
     private final TeamRepository teamRepository;
+    private final MatchRepository matchRepository;
 
     @Override
     public void run(String... args) throws Exception {
@@ -59,7 +66,7 @@ public class DataLoader implements CommandLineRunner {
                 "Barça Rugby",
                 "Barcelona",
                 "Spain",
-                 "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSsjavn6dgnDe75jfE0gdR7hc48s4nnqk7CNg&s"
+                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSsjavn6dgnDe75jfE0gdR7hc48s4nnqk7CNg&s"
         ));
 
         Club geieg = clubRepository.save(new Club(
@@ -71,21 +78,88 @@ public class DataLoader implements CommandLineRunner {
         ));
 
         // FIELDS
-        fieldRepository.save(new Field(null, "Campo 1", "UES Rugby Complex"));
-        fieldRepository.save(new Field(null, "Campo 2", "UES Rugby Complex"));
-        fieldRepository.save(new Field(null, "Campo 3", "UES Rugby Complex"));
-        fieldRepository.save(new Field(null, "Campo 4", "UES Rugby Complex"));
+        Field field1 = fieldRepository.save(
+                new Field(null, "Campo 1", "UES Rugby Complex"));
 
-        // TEAMS
-        teamRepository.save(new Team(null, "UES SUB6", Category.SUB6, ues));
-        teamRepository.save(new Team(null, "UES SUB8", Category.SUB8, ues));
-        teamRepository.save(new Team(null, "UES SUB10", Category.SUB10, ues));
-        teamRepository.save(new Team(null, "UES SUB12", Category.SUB12, ues));
+        Field field2 = fieldRepository.save(
+                new Field(null, "Campo 2", "UES Rugby Complex"));
 
-        teamRepository.save(new Team(null, "Barça SUB10", Category.SUB10, barca));
-        teamRepository.save(new Team(null, "Barça SUB12", Category.SUB12, barca));
+        Field field3 = fieldRepository.save(
+                new Field(null, "Campo 3", "UES Rugby Complex"));
 
-        teamRepository.save(new Team(null, "GEiEG SUB8", Category.SUB8, geieg));
-        teamRepository.save(new Team(null, "GEiEG SUB10", Category.SUB10, geieg));
+        Field field4 = fieldRepository.save(
+                new Field(null, "Campo 4", "UES Rugby Complex"));
+
+
+// TEAMS
+        Team uesSub6 = teamRepository.save(
+                new Team(null, "UES SUB6", Category.SUB6, ues));
+
+        Team uesSub8 = teamRepository.save(
+                new Team(null, "UES SUB8", Category.SUB8, ues));
+
+        Team uesSub10 = teamRepository.save(
+                new Team(null, "UES SUB10", Category.SUB10, ues));
+
+        Team uesSub12 = teamRepository.save(
+                new Team(null, "UES SUB12", Category.SUB12, ues));
+
+        Team barcaSub10 = teamRepository.save(
+                new Team(null, "Barça SUB10", Category.SUB10, barca));
+
+        Team barcaSub12 = teamRepository.save(
+                new Team(null, "Barça SUB12", Category.SUB12, barca));
+
+        Team geiegSub8 = teamRepository.save(
+                new Team(null, "GEiEG SUB8", Category.SUB8, geieg));
+
+        Team geiegSub10 = teamRepository.save(
+                new Team(null, "GEiEG SUB10", Category.SUB10, geieg));
+
+        //Matches
+        matchRepository.save(
+                Match.builder()
+                        .localTeam(uesSub10)
+                        .visitorTeam(barcaSub10)
+                        .field(field1)
+                        .matchDate(LocalDate.now())
+                        .startTime(LocalTime.of(10, 0))
+                        .endTime(LocalTime.of(10, 15))
+                        .localTries(4)
+                        .visitorTries(2)
+                        .status(MatchStatus.FINISHED)
+                        .roundNumber(1)
+                        .build()
+        );
+
+        matchRepository.save(
+                Match.builder()
+                        .localTeam(geiegSub10)
+                        .visitorTeam(uesSub10)
+                        .field(field2)
+                        .matchDate(LocalDate.now())
+                        .startTime(LocalTime.of(10, 20))
+                        .endTime(LocalTime.of(10, 35))
+                        .localTries(1)
+                        .visitorTries(1)
+                        .status(MatchStatus.FINISHED)
+                        .roundNumber(1)
+                        .build()
+        );
+
+        matchRepository.save(
+                Match.builder()
+                        .localTeam(barcaSub10)
+                        .visitorTeam(geiegSub10)
+                        .field(field3)
+                        .matchDate(LocalDate.now())
+                        .startTime(LocalTime.of(10, 40))
+                        .endTime(LocalTime.of(10, 55))
+                        .localTries(5)
+                        .visitorTries(4)
+                        .status(MatchStatus.FINISHED)
+                        .roundNumber(1)
+                        .build()
+        );
     }
 }

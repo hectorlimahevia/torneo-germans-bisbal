@@ -52,7 +52,18 @@ class MatchServiceImpl implements MatchService {
         Field field = fieldRepository.findById(dto.getFieldId())
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Field not found"));
+//validaciones para que no cruzen los equipos de dist. categorias
+        if (localTeam.getCategory() != visitorTeam.getCategory()) {
+            throw new IllegalArgumentException(
+                    "Teams must belong to the same category");
+        }
 
+        if (localTeam.getId().equals(visitorTeam.getId())) {
+            throw new IllegalArgumentException(
+                    "A team cannot play against itself");
+        }
+
+        //creando el partido
         Match match = Match.builder()
                 .localTeam(localTeam)
                 .visitorTeam(visitorTeam)
@@ -99,6 +110,7 @@ class MatchServiceImpl implements MatchService {
 
         return matchRepository.save(existingMatch);
     }
+
     @Override
     public void deleteMatch(Long id) {
         getMatchById(id);

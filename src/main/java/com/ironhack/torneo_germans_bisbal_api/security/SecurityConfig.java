@@ -92,6 +92,7 @@ public class SecurityConfig {
                         .requestMatchers(POST, "/api/matches/**").hasAnyAuthority("ROLE_ADMIN")
                         .requestMatchers(PUT, "/api/matches/**").hasAnyAuthority("ROLE_ADMIN")
                         .requestMatchers(DELETE, "/api/matches/**").hasAnyAuthority("ROLE_ADMIN")
+                        .requestMatchers(GET, "/api/standings/**").permitAll()
 
                         .requestMatchers(POST, "/api/users").hasAnyAuthority("ROLE_ADMIN")
                         .requestMatchers(POST, "/api/roles").hasAnyAuthority("ROLE_ADMIN")

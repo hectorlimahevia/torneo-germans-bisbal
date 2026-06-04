@@ -52,7 +52,7 @@ class MatchServiceImpl implements MatchService {
         Field field = fieldRepository.findById(dto.getFieldId())
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Field not found"));
-//validaciones para que no cruzen los equipos de dist. categorias
+        //validaciones para que no cruzen los equipos de dist. categorias
         if (localTeam.getCategory() != visitorTeam.getCategory()) {
             throw new IllegalArgumentException(
                     "Teams must belong to the same category");
@@ -61,6 +61,49 @@ class MatchServiceImpl implements MatchService {
         if (localTeam.getId().equals(visitorTeam.getId())) {
             throw new IllegalArgumentException(
                     "A team cannot play against itself");
+        }
+
+        //validar anotaciones y horarios de los partidos
+        if (dto.getLocalTries() < 0 || dto.getVisitorTries() < 0) {
+            throw new IllegalArgumentException(
+                    "Tries cannot be negative");
+        }
+
+        if (dto.getEndTime().isBefore(dto.getStartTime())
+                || dto.getEndTime().equals(dto.getStartTime())) {
+
+            throw new IllegalArgumentException(
+                    "End time must be after start time");
+        }
+
+        //validad si se solapan
+        List<Match> existingMatches = matchRepository.findAll();
+
+        for (Match existingMatch : existingMatches) {
+
+            boolean sameField = existingMatch.getField().getId().equals(field.getId());
+
+            boolean sameDate = existingMatch.getMatchDate().equals(dto.getMatchDate());
+
+            boolean timeOverlaps =
+                    dto.getStartTime().isBefore(existingMatch.getEndTime())
+                            && dto.getEndTime().isAfter(existingMatch.getStartTime());
+            boolean localTeamAlreadyPlaying =
+                    existingMatch.getLocalTeam().getId().equals(localTeam.getId())
+                            || existingMatch.getVisitorTeam().getId().equals(localTeam.getId());
+
+            boolean visitorTeamAlreadyPlaying =
+                    existingMatch.getLocalTeam().getId().equals(visitorTeam.getId())
+                            || existingMatch.getVisitorTeam().getId().equals(visitorTeam.getId());
+
+            if (sameDate && timeOverlaps && (localTeamAlreadyPlaying || visitorTeamAlreadyPlaying)) {
+                throw new IllegalArgumentException(
+                        "One of the teams is already playing at this time");
+            }
+            if (sameField && sameDate && timeOverlaps) {
+                throw new IllegalArgumentException(
+                        "Field is already occupied at this time");
+            }
         }
 
         //creando el partido

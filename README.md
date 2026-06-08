@@ -125,8 +125,13 @@ IA
 GET /api/ai/chat?message=...
 
 ## Diagrama ERD
-
 ![ERD](docs/images/torneo_germans_bisbal_db.png)
+
+## Diagrama clases
+![ERD](docs/images/diagrama_de_clases.jpg)
+
+## Ejemplo de conversación
+![ERD](docs/images/captura_chat_AI.jpg)
 
 ## Mejoras futuras:
 

@@ -4,6 +4,7 @@ import com.ironhack.torneo_germans_bisbal_api.service.AiService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import com.ironhack.torneo_germans_bisbal_api.model.enums.Category;
+import org.springframework.security.core.Authentication;
 
 @RestController
 @RequestMapping("/api/ai")
@@ -12,13 +13,13 @@ public class AiController {
 
     private final AiService aiService;
 
-    @GetMapping("/chat/{conversationId}")
+    @GetMapping("/chat")
     public String chatWithMemory(
-            @PathVariable String conversationId,
-            @RequestParam String message) {
+            @RequestParam String message, Authentication authentication) {
+        String username = authentication.getName();
 
         return aiService.chatWithMemory(
-                conversationId,
+                username,
                 message);
     }
 

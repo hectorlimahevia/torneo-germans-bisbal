@@ -1,12 +1,9 @@
 package com.ironhack.torneo_germans_bisbal_api.controller;
 
 import com.ironhack.torneo_germans_bisbal_api.service.AiService;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import com.ironhack.torneo_germans_bisbal_api.model.enums.Category;
 
 @RestController
 @RequestMapping("/api/ai")
@@ -15,8 +12,19 @@ public class AiController {
 
     private final AiService aiService;
 
-    @GetMapping("/chat")
-    public String chat(@RequestParam String message){
-        return aiService.chat(message);
+    @GetMapping("/chat/{conversationId}")
+    public String chatWithMemory(
+            @PathVariable String conversationId,
+            @RequestParam String message) {
+
+        return aiService.chatWithMemory(
+                conversationId,
+                message);
+    }
+
+    @GetMapping("/summary/{category}")
+    public String getCategorySummary(@PathVariable Category category) {
+
+        return aiService.getCategorySummary(category);
     }
 }

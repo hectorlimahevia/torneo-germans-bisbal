@@ -98,6 +98,11 @@ public class SecurityConfig {
                         .requestMatchers(POST, "/api/roles").hasAnyAuthority("ROLE_ADMIN")
                         .requestMatchers(POST, "/api/roles/add-to-user").hasAnyAuthority("ROLE_ADMIN")
 
+                        .requestMatchers(GET, "/api/rules/**").permitAll()
+                        .requestMatchers(POST, "/api/rules/**").hasAnyAuthority("ROLE_ADMIN")
+                        .requestMatchers(PUT, "/api/rules/**").hasAnyAuthority("ROLE_ADMIN")
+                        .requestMatchers(DELETE, "/api/rules/**").hasAnyAuthority("ROLE_ADMIN")
+
                         .requestMatchers(GET, "/api/ai/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                         .anyRequest().authenticated()); // any other endpoints require authentication
 

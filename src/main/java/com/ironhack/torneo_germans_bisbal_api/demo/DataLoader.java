@@ -17,6 +17,9 @@ import org.springframework.stereotype.Component;
 import com.ironhack.torneo_germans_bisbal_api.model.entity.Match;
 import com.ironhack.torneo_germans_bisbal_api.model.enums.MatchStatus;
 import com.ironhack.torneo_germans_bisbal_api.repository.MatchRepository;
+import com.ironhack.torneo_germans_bisbal_api.repository.RuleRepository;
+import com.ironhack.torneo_germans_bisbal_api.model.entity.ScoringRule;
+import com.ironhack.torneo_germans_bisbal_api.model.entity.ScheduleRule;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -33,9 +36,14 @@ public class DataLoader implements CommandLineRunner {
     private final TeamRepository teamRepository;
     private final MatchRepository matchRepository;
 
+    private final RuleRepository ruleRepository;
+
     @Override
     public void run(String... args) throws Exception {
-
+       //protegiendo el dataloader de duplicados
+        if (clubRepository.count() > 0) {
+            return;
+        }
         // ROLES
         roleService.save(new Role("ROLE_USER"));
         roleService.save(new Role("ROLE_ADMIN"));
@@ -160,6 +168,54 @@ public class DataLoader implements CommandLineRunner {
                         .status(MatchStatus.FINISHED)
                         .roundNumber(1)
                         .build()
+        );
+
+        //Rules
+        // RULES
+
+        ruleRepository.save(
+                new ScoringRule(
+                        null,
+                        "Victory",
+                        "A victory grants 3 points",
+                        3
+                )
+        );
+
+        ruleRepository.save(
+                new ScoringRule(
+                        null,
+                        "Draw",
+                        "A draw grants 1 point",
+                        1
+                )
+        );
+
+        ruleRepository.save(
+                new ScoringRule(
+                        null,
+                        "Offensive Bonus",
+                        "More than 3 tries grants 1 bonus point",
+                        1
+                )
+        );
+
+        ruleRepository.save(
+                new ScheduleRule(
+                        null,
+                        "SUB10 Schedule",
+                        "SUB10 matches are played between 10:30 and 12:30",
+                        Category.SUB10
+                )
+        );
+
+        ruleRepository.save(
+                new ScheduleRule(
+                        null,
+                        "SUB12 Schedule",
+                        "SUB12 matches are played between 14:00 and 16:00",
+                        Category.SUB12
+                )
         );
     }
 }

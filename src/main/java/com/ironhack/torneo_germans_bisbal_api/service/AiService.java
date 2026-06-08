@@ -1,6 +1,10 @@
 package com.ironhack.torneo_germans_bisbal_api.service;
 
+import com.ironhack.torneo_germans_bisbal_api.model.enums.Category;
+
 public interface AiService {
 
-    String chat(String message);
+    String chatWithMemory(String conversationId, String message);
+
+    String getCategorySummary(Category category);
 }

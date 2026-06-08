@@ -128,10 +128,10 @@ GET /api/ai/chat?message=...
 ![ERD](docs/images/torneo_germans_bisbal_db.png)
 
 ## Diagrama clases
-![ERD](docs/images/diagrama_de_clases.jpg)
+![ERD](docs/images/diagrama_de_clases.png)
 
 ## Ejemplo de conversación
-![ERD](docs/images/captura_chat_AI.jpg)
+![ERD](docs/images/captura_chat_AI.png)
 
 ## Mejoras futuras:
 

@@ -33,8 +33,8 @@ public class MatchController {
     }
 
     @PutMapping("/{id}")
-    public Match updateMatch(@PathVariable Long id, @RequestBody Match match){
-        return matchService.updateMatch(id, match);
+    public MatchResponseDTO updateMatch(@PathVariable Long id, @RequestBody MatchRequestDTO dto) {
+        return matchService.updateMatch(id, dto);
     }
 
     @DeleteMapping("/{id}")

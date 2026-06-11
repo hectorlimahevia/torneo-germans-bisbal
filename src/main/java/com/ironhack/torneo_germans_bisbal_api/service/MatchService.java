@@ -14,7 +14,7 @@ public interface MatchService {
 
     MatchResponseDTO createMatch(MatchRequestDTO dto);
 
-    Match updateMatch(Long id, Match match);
+    MatchResponseDTO updateMatch(Long id, MatchRequestDTO dto);
 
     void deleteMatch(Long id);
 }

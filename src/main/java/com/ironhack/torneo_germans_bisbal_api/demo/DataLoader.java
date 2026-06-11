@@ -87,16 +87,16 @@ public class DataLoader implements CommandLineRunner {
 
         // FIELDS
         Field field1 = fieldRepository.save(
-                new Field(null, "Campo 1", "UES Rugby Complex"));
+                new Field(null, "Field 1", "UES Rugby Complex"));
 
         Field field2 = fieldRepository.save(
-                new Field(null, "Campo 2", "UES Rugby Complex"));
+                new Field(null, "Field 2", "UES Rugby Complex"));
 
         Field field3 = fieldRepository.save(
-                new Field(null, "Campo 3", "UES Rugby Complex"));
+                new Field(null, "Field 3", "UES Rugby Complex"));
 
         Field field4 = fieldRepository.save(
-                new Field(null, "Campo 4", "UES Rugby Complex"));
+                new Field(null, "Field 4", "UES Rugby Complex"));
 
 
 // TEAMS

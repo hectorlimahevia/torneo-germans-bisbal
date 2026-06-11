@@ -89,21 +89,52 @@ class MatchServiceImpl implements MatchService {
     }
 
     @Override
-    public Match updateMatch(Long id, Match match) {
+    public MatchResponseDTO updateMatch(Long id, MatchRequestDTO dto) {
+
         Match existingMatch = getMatchById(id);
 
-        existingMatch.setLocalTeam(match.getLocalTeam());
-        existingMatch.setVisitorTeam(match.getVisitorTeam());
-        existingMatch.setField(match.getField());
-        existingMatch.setMatchDate(match.getMatchDate());
-        existingMatch.setStartTime(match.getStartTime());
-        existingMatch.setEndTime(match.getEndTime());
-        existingMatch.setLocalTries(match.getLocalTries());
-        existingMatch.setVisitorTries(match.getVisitorTries());
-        existingMatch.setStatus(match.getStatus());
-        existingMatch.setRoundNumber(match.getRoundNumber());
+        Team localTeam = teamRepository.findById(dto.getLocalTeamId())
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Local team not found"));
 
-        return matchRepository.save(existingMatch);
+        Team visitorTeam = teamRepository.findById(dto.getVisitorTeamId())
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Visitor team not found"));
+
+        Field field = fieldRepository.findById(dto.getFieldId())
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Field not found"));
+
+        validateTeams(localTeam, visitorTeam);
+        validateScore(dto);
+        validateTime(dto);
+
+        existingMatch.setLocalTeam(localTeam);
+        existingMatch.setVisitorTeam(visitorTeam);
+        existingMatch.setField(field);
+        existingMatch.setMatchDate(dto.getMatchDate());
+        existingMatch.setStartTime(dto.getStartTime());
+        existingMatch.setEndTime(dto.getEndTime());
+        existingMatch.setLocalTries(dto.getLocalTries());
+        existingMatch.setVisitorTries(dto.getVisitorTries());
+        existingMatch.setStatus(dto.getStatus());
+        existingMatch.setRoundNumber(dto.getRoundNumber());
+
+        Match updatedMatch = matchRepository.save(existingMatch);
+
+        return MatchResponseDTO.builder()
+                .id(updatedMatch.getId())
+                .localTeamName(updatedMatch.getLocalTeam().getName())
+                .visitorTeamName(updatedMatch.getVisitorTeam().getName())
+                .fieldName(updatedMatch.getField().getName())
+                .matchDate(updatedMatch.getMatchDate())
+                .startTime(updatedMatch.getStartTime())
+                .endTime(updatedMatch.getEndTime())
+                .localTries(updatedMatch.getLocalTries())
+                .visitorTries(updatedMatch.getVisitorTries())
+                .status(updatedMatch.getStatus())
+                .roundNumber(updatedMatch.getRoundNumber())
+                .build();
     }
 
     @Override

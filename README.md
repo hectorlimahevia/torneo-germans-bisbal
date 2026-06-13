@@ -145,4 +145,7 @@ Tablero de proyecto en Trello.
 https://trello.com/invite/b/6a158e476e666c95a3264e03/ATTIc069c00a3dea0b8a8d616c8d599d0b07297379CE/proyecto-final-ironhacktorneo-app-web
 
 ## Repositorio
+Repositorio de la API:
 https://github.com/hectorlimahevia/torneo-germans-bisbal-api
+Repositorio del Frontend Demo:
+https://github.com/hectorlimahevia/torneo-germans-bisbal-frontend

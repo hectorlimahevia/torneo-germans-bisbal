@@ -115,9 +115,9 @@ async function sendMessage() {
   z-index: 80;
   width: 60px;
   height: 60px;
-  border: none;
+  border: 1px solid;
   border-radius: 50%;
-  background: #2b8de9;
+  background: var(--primary-light);
   color: white;
   font-size: 28px;
   box-shadow: var(--shadow);
@@ -131,7 +131,7 @@ async function sendMessage() {
 
 .chat-toggle:hover {
   transform: scale(1.08);
-   overflow: visible;
+  overflow: visible;
 }
 
 .chat-toggle img {
@@ -167,7 +167,7 @@ async function sendMessage() {
   bottom: 90px;
   width: 340px;
   height: 500px;
-  background: white;
+  background: rgb(242, 244, 247);
   border-radius: 16px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
   display: flex;
@@ -177,7 +177,7 @@ async function sendMessage() {
 }
 
 .chat-header {
-  background: var(--primary);
+  background: var(--primary-light);
   color: white;
   padding: 16px;
   font-weight: 800;
@@ -279,9 +279,12 @@ async function sendMessage() {
   border: none;
   border-radius: 999px;
   padding: 10px 14px;
-  background: var(--primary);
+  background: var(--primary-light);
   color: white;
   font-weight: 800;
   cursor: pointer;
+}
+.chat-form button:hover{
+  background: var(--primary);
 }
 </style>

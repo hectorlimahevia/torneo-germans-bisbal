@@ -31,7 +31,8 @@ function handleLogout() {
     </button>
 
     <div v-if="isAuthenticated" class="user-badge">
-      <span>{{ isAdmin ? '🛡️' : '👤' }}</span>
+      <i :class="isAdmin ? 'fa-solid fa-shield-halved' : 'fa-solid fa-users'"></i>
+
       <span>{{ currentUser }}</span>
     </div>
   </header>
@@ -101,15 +102,11 @@ function handleLogout() {
   top: 0;
   left: 0;
   z-index: 90;
-
   width: 270px;
   height: 100vh;
-
   background: var(--primary);
-
   display: flex;
   flex-direction: column;
-
   padding-top: 90px;
   box-shadow: var(--shadow);
 }
@@ -117,14 +114,11 @@ function handleLogout() {
 .mobile-menu a,
 .logout-link {
   padding: 16px 28px;
-
   color: white;
   background: transparent;
-
   text-decoration: none;
   font-weight: 500;
   font-size: 16px;
-
   border: none;
   text-align: left;
   cursor: pointer;
@@ -144,22 +138,26 @@ function handleLogout() {
   top: 18px;
   right: 18px;
   z-index: 100;
-
   display: flex;
   align-items: center;
   gap: 6px;
-
   padding: 10px 12px;
-
-  background: white;
+  background: var(--primary-light);
   border: 1px solid var(--border);
   border-radius: 999px;
-
   box-shadow: var(--shadow);
-
-  color: var(--primary);
-
+  color: #fff;
   font-size: 14px;
   font-weight: 700;
+}
+
+.user-badge i {
+  font-size: 0.95rem;
+}
+
+.user-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 </style>

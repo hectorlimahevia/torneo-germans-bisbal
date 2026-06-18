@@ -77,6 +77,7 @@ public class SecurityConfig {
                         .sessionCreationPolicy(STATELESS))
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers("/api/login/**").permitAll()// public endpoint, we could add more if we wanted to
+                        .requestMatchers(POST, "/api/register").permitAll()
                         .requestMatchers("/api/greet").permitAll()
                         .requestMatchers("/api/greet/personal").hasAnyAuthority("ROLE_USER")
 

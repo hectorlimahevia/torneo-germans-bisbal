@@ -2,6 +2,7 @@ package com.ironhack.torneo_germans_bisbal_api.controller;
 
 
 import com.ironhack.torneo_germans_bisbal_api.model.User;
+import com.ironhack.torneo_germans_bisbal_api.service.RoleService;
 import com.ironhack.torneo_germans_bisbal_api.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ public class UserController {
 
 
     private final UserService userService;
+    private final RoleService roleService;
 
     /**
      * Get a list of all users
@@ -38,4 +40,13 @@ public class UserController {
     public void saveUser(@RequestBody User user) {
         userService.saveUser(user);
     }
+
+    @PostMapping("/register")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void registerUser(@RequestBody User user) {
+        userService.saveUser(user);
+        roleService.addRoleToUser(user.getUsername(), "ROLE_USER");
+    }
 }
+
+

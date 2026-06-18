@@ -136,7 +136,7 @@ h3 {
 
 .create-button {
   align-self: center;
-  width: 70%;
+  width: 50%;
   max-width: 260px;
   background: var(--primary);
   color: white;
@@ -165,7 +165,7 @@ h3 {
 
 .delete-button {
   align-self: center;
-  width: 70%;
+  width: 50%;
   max-width: 260px;
   background: #dc2626;
   color: white;

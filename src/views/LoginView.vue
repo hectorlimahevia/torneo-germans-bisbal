@@ -158,7 +158,7 @@ input {
 }
 
 button {
-  width: 100%;
+  width: 50%;
   margin-top: 8px;
   padding: 14px;
   border: none;
@@ -167,6 +167,8 @@ button {
   color: white;
   font-weight: 800;
   cursor: pointer;
+  display: block;
+  margin: auto;
 }
 
 .guest-link,
@@ -174,7 +176,7 @@ button {
   display: block;
   margin-top: 16px;
   color: var(--primary);
-  font-weight: 700;
+  font-weight: 600;
   text-decoration: none;
 }
 </style>

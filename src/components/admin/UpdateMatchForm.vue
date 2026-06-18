@@ -186,7 +186,7 @@ h3 {
 .create-button,
 .delete-button {
   align-self: center;
-  width: 70%;
+  width: 50%;
   max-width: 260px;
   color: white;
   border: none;

@@ -9,6 +9,7 @@ import ScheduleMatchForm from '@/components/admin/ScheduleMatchForm.vue'
 import UpdateMatchForm from '@/components/admin/UpdateMatchForm.vue'
 import CreateFieldForm from '@/components/admin/CreateFieldForm.vue'
 import ConfirmModal from '@/components/ConfirmModal.vue'
+import AdminChart from '@/components/admin/AdminChart.vue'
 
 import { useToast } from '@/composables/useToast'
 
@@ -93,7 +94,7 @@ async function updateMatch(payload) {
 
   const selectedMatchId = payload.selectedMatchId
   const matchUpdate = payload.matchUpdate
-  
+
   try {
     error.value = ''
 
@@ -239,6 +240,8 @@ onMounted(loadData)
       :teams-count="teams.length"
       :fields-count="fields.length"
     />
+
+    <AdminChart :matches="matches" />
 
     <AdminTabs :selected-tab="selectedAdminTab" @tab-selected="selectedAdminTab = $event" />
 

@@ -42,14 +42,14 @@ const emit = defineEmits(['confirm', 'cancel'])
       <p>{{ props.message }}</p>
 
       <div class="modal-actions">
-        <button
-          type="button"
-          class="cancel-button"
-          :disabled="props.isLoading"
-          @click="emit('cancel')"
-        >
-          {{ props.cancelText }}
-        </button>
+<button
+  type="button"
+  class="cancel-button"
+  :disabled="props.isLoading"
+  @click="emit('cancel')"
+>
+  {{ props.cancelText }}
+</button>
 
         <button
           type="button"

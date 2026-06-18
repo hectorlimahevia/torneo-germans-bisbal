@@ -1,11 +1,47 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { RouterLink } from 'vue-router'
-
+import autovivoLogo from '@/assets/autovivo_logo.jpg'
+import bitmatLogo from '@/assets/bitmat_logo.png'
+import neopequesLogo from '@/assets/neopeques_logo.png'
+import lecoqLogo from '@/assets/lecoq_logo.jpg'
 import api from '@/api/api'
 
 const matches = ref([])
 const error = ref('')
+
+const sponsors = [
+  { name: 'Autovivo', logo: autovivoLogo },
+  { name: 'Bitmat', logo: bitmatLogo },
+  { name: 'Neopeques', logo: neopequesLogo },
+  { name: 'Le Coq Sportif', logo: lecoqLogo },
+]
+
+const currentSponsor = ref(0)
+
+function nextSponsor() {
+  currentSponsor.value = (currentSponsor.value + 1) % sponsors.length
+}
+
+function previousSponsor() {
+  currentSponsor.value = (currentSponsor.value - 1 + sponsors.length) % sponsors.length
+}
+
+function goToSponsor(index) {
+  currentSponsor.value = index
+}
+
+function getSponsorClass(index) {
+  const total = sponsors.length
+  const previousIndex = (currentSponsor.value - 1 + total) % total
+  const nextIndex = (currentSponsor.value + 1) % total
+
+  if (index === currentSponsor.value) return 'active'
+  if (index === previousIndex) return 'previous'
+  if (index === nextIndex) return 'next'
+
+  return 'hidden'
+}
 
 async function loadHomeData() {
   try {
@@ -89,14 +125,34 @@ onMounted(loadHomeData)
     <section class="sponsors-section">
       <h2>Sponsors</h2>
 
-      <div class="sponsors-carousel">
-        <div class="sponsor-card"><img src="@/assets/autovivo_logo.jpg" alt="Sponsor" /></div>
+      <div class="coverflow-carousel">
+        <button type="button" class="carousel-arrow left" @click="previousSponsor">‹</button>
 
-        <div class="sponsor-card"><img src="@/assets/bitmat_logo.png" alt="Sponsor" /></div>
+        <div class="sponsor-stage">
+          <article
+            v-for="(sponsor, index) in sponsors"
+            :key="sponsor.name"
+            class="sponsor-card"
+            :class="getSponsorClass(index)"
+          >
+            <img :src="sponsor.logo" :alt="sponsor.name" />
 
-        <div class="sponsor-card"><img src="@/assets/neopeques_logo.png" alt="Sponsor" /></div>
+            <span>{{ sponsor.name }}</span>
+          </article>
+        </div>
 
-        <div class="sponsor-card"><img src="@/assets/lecoq_logo.jpg" alt="Sponsor" /></div>
+        <button type="button" class="carousel-arrow right" @click="nextSponsor">›</button>
+      </div>
+
+      <div class="carousel-dots">
+        <button
+          v-for="(sponsor, index) in sponsors"
+          :key="sponsor.name"
+          type="button"
+          class="dot"
+          :class="{ active: currentSponsor === index }"
+          @click="goToSponsor(index)"
+        />
       </div>
     </section>
 
@@ -129,36 +185,26 @@ onMounted(loadHomeData)
 
 .hero-kicker {
   display: block;
-
   color: var(--primary);
-
   font-size: 13px;
   font-weight: 800;
-
   letter-spacing: 8px;
-
   margin-bottom: 6px;
 }
 
 .hero-title h1 {
   margin: 0;
-
   color: var(--primary);
-
   font-size: 46px;
   line-height: 0.95;
-
   font-weight: 900;
 }
 
 .hero-slogan {
   margin-top: 12px;
-
   color: #7d6a52;
-
   font-size: 14px;
   font-weight: 800;
-
   letter-spacing: 2px;
 }
 
@@ -235,21 +281,15 @@ onMounted(loadHomeData)
 .quick-nav {
   display: flex;
   gap: 20px;
-
   overflow-x: auto;
-
   padding-bottom: 8px;
-
   border-bottom: 1px solid var(--border);
 }
 
 .quick-nav a {
   text-decoration: none;
-
   color: var(--text-secondary);
-
   font-weight: 800;
-
   white-space: nowrap;
 }
 
@@ -288,39 +328,145 @@ onMounted(loadHomeData)
 
 /* sponsors-section  */
 .sponsors-section {
-  margin-bottom: 24px;
+  margin-top: 40px;
 }
 
 .sponsors-section h2 {
   color: var(--primary);
 }
 
-.sponsors-carousel {
-  display: flex;
-  gap: 12px;
-
-  overflow-x: auto;
-
-  padding-bottom: 8px;
-}
-
-.sponsor-card {
-  min-width: 110px;
-  height: 85px;
+.coverflow-carousel {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-top: 20px;
+}
+
+.sponsor-stage {
+  position: relative;
+  width: 100%;
+  height: 170px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.sponsor-card {
+  position: absolute;
+  width: 48%;
+  max-width: 260px;
+  height: 135px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: var(--radius);
+  border-radius: 18px;
   box-shadow: var(--shadow);
-  font-weight: 700;
-  color: var(--primary);
+
+  transition:
+    transform 0.35s ease,
+    opacity 0.35s ease,
+    z-index 0.35s ease;
 }
 
 .sponsor-card img {
-  max-width: 80%;
+  max-width: 140px;
   max-height: 60px;
   object-fit: contain;
+}
+
+.sponsor-card span {
+  color: var(--primary);
+
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.sponsor-card.active {
+  z-index: 3;
+  opacity: 1;
+  transform: translateX(0) scale(1);
+}
+
+.sponsor-card.previous {
+  z-index: 2;
+  opacity: 0.55;
+  transform: translateX(-28%) scale(0.85);
+  background: #f1f2f3;
+}
+
+.sponsor-card.next {
+  z-index: 2;
+  opacity: 0.55;
+  transform: translateX(28%) scale(0.85);
+  background: #f1f2f3;
+}
+
+.sponsor-card.hidden {
+  z-index: 1;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(0) scale(0.7);
+}
+
+.carousel-arrow {
+  position: absolute;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: var(--primary);
+  color: white;
+  font-size: 20px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.carousel-arrow.left {
+  left: 6px;
+}
+
+.carousel-arrow.right {
+  right: 6px;
+}
+
+.carousel-arrow:hover {
+  background: var(--primary-light);
+  transform: scale(1.08);
+}
+
+.carousel-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+
+  margin-top: 14px;
+}
+
+.dot {
+  width: 9px;
+  height: 9px;
+  border: none;
+  border-radius: 999px;
+  background: #d1d5db;
+  cursor: pointer;
+  transition:
+    width 0.25s ease,
+    background 0.25s ease;
+}
+
+.dot.active {
+  width: 22px;
+  background: var(--primary);
 }
 </style>

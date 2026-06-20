@@ -2,6 +2,8 @@ package com.ironhack.torneo_germans_bisbal_api.controller;
 
 
 import com.ironhack.torneo_germans_bisbal_api.model.User;
+import com.ironhack.torneo_germans_bisbal_api.dto.UserResponseDTO;
+import com.ironhack.torneo_germans_bisbal_api.model.Role;
 import com.ironhack.torneo_germans_bisbal_api.service.RoleService;
 import com.ironhack.torneo_germans_bisbal_api.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -26,8 +28,19 @@ public class UserController {
      */
     @GetMapping("/users")
     @ResponseStatus(HttpStatus.OK)
-    public List<User> getUsers() {
-        return userService.getUsers();
+    public List<UserResponseDTO> getUsers() {
+        return userService.getUsers()
+                .stream()
+                .map(user -> new UserResponseDTO(
+                        user.getId(),
+                        user.getName(),
+                        user.getUsername(),
+                        user.getRoles()
+                                .stream()
+                                .map(Role::getName)
+                                .toList()
+                ))
+                .toList();
     }
 
     /**

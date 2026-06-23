@@ -37,4 +37,14 @@ public class RoleController {
     public void addRoleToUser(@RequestBody RoleToUserDTO roleToUserDTO) {
         roleService.addRoleToUser(roleToUserDTO.getUsername(), roleToUserDTO.getRoleName());
     }
+
+    @PostMapping("/roles/remove-from-user")
+    @ResponseStatus(HttpStatus.OK)
+    public void removeRoleFromUser(@RequestBody RoleToUserDTO roleToUserDTO) {
+        roleService.removeRoleFromUser(
+                roleToUserDTO.getUsername(),
+                roleToUserDTO.getRoleName()
+        );
+    }
+
 }

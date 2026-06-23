@@ -19,4 +19,6 @@ public interface RoleService {
      * @param roleName the name of the Role to be added.
      */
     void addRoleToUser(String username, String roleName);
+
+    void removeRoleFromUser(String username, String roleName);
 }

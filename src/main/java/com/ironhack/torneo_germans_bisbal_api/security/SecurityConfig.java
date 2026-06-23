@@ -107,6 +107,7 @@ public class SecurityConfig {
                         .requestMatchers(POST, "/api/users").hasAnyAuthority("ROLE_ADMIN")
                         .requestMatchers(POST, "/api/roles").hasAnyAuthority("ROLE_ADMIN")
                         .requestMatchers(POST, "/api/roles/add-to-user").hasAnyAuthority("ROLE_ADMIN")
+                        .requestMatchers(POST, "/api/roles/remove-from-user").hasAnyAuthority("ROLE_ADMIN")
 
                         .requestMatchers(GET, "/api/rules/**").permitAll()
                         .requestMatchers(POST, "/api/rules/**").hasAnyAuthority("ROLE_ADMIN")

@@ -52,4 +52,17 @@ public class RoleServiceImpl implements RoleService {
         // Save the user to persist the changes
         userRepository.save(user);
     }
+
+    @Override
+    public void removeRoleFromUser(String username, String roleName) {
+        log.info("Removing role {} from user {}", roleName, username);
+
+        User user = userRepository.findByUsername(username);
+        Role role = roleRepository.findByName(roleName);
+
+        user.getRoles().remove(role);
+
+        userRepository.save(user);
+    }
+
 }

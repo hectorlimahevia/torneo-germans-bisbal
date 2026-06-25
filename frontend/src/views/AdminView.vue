@@ -10,12 +10,14 @@ import UpdateMatchForm from '@/components/admin/UpdateMatchForm.vue'
 import CreateFieldForm from '@/components/admin/CreateFieldForm.vue'
 import ConfirmModal from '@/components/ConfirmModal.vue'
 import AdminChart from '@/components/admin/AdminChart.vue'
+import AdminUsers from '@/components/admin/AdminUsers.vue'
 
 import { useToast } from '@/composables/useToast'
 
 const teams = ref([])
 const fields = ref([])
 const matches = ref([])
+const users = ref([])
 
 const scheduleResetKey = ref(0)
 const updateResetKey = ref(0)
@@ -42,15 +44,17 @@ const { showToast } = useToast()
 
 async function loadData() {
   try {
-    const [teamsResponse, fieldsResponse, matchesResponse] = await Promise.all([
+    const [teamsResponse, fieldsResponse, matchesResponse, usersResponse] = await Promise.all([
       api.get('/api/teams'),
       api.get('/api/fields'),
       api.get('/api/matches'),
+      api.get('/api/users'),
     ])
 
     teams.value = teamsResponse.data
     fields.value = fieldsResponse.data
     matches.value = matchesResponse.data
+    users.value = usersResponse.data
   } catch (err) {
     console.error(err)
 
@@ -228,6 +232,40 @@ function closeConfirmModal() {
   }
 }
 
+async function makeAdmin(user) {
+  try {
+    await api.post('/api/roles/add-to-user', {
+      username: user.username,
+      roleName: 'ROLE_ADMIN',
+    })
+
+    showToast('Admin role assigned successfully', 'success')
+
+    await loadData()
+  } catch (err) {
+    console.error(err)
+
+    showToast(getErrorMessage(err, 'Could not assign admin role'), 'error')
+  }
+}
+
+async function removeAdmin(user) {
+  try {
+    await api.post('/api/roles/remove-from-user', {
+      username: user.username,
+      roleName: 'ROLE_ADMIN',
+    })
+
+    showToast('Admin role removed successfully', 'success')
+
+    await loadData()
+  } catch (err) {
+    console.error(err)
+
+    showToast(getErrorMessage(err, 'Could not remove admin role'), 'error')
+  }
+}
+
 onMounted(loadData)
 </script>
 
@@ -275,6 +313,13 @@ onMounted(loadData)
       @field-deleted="deleteField"
     />
 
+    <AdminUsers
+      v-if="selectedAdminTab === 'users'"
+      :users="users"
+      @make-admin="makeAdmin"
+      @remove-admin="removeAdmin"
+    />
+
     <p v-if="error" class="error-message">
       {{ error }}
     </p>
@@ -305,6 +350,7 @@ section {
 }
 
 h2 {
+  margin-top: 4rem;
   color: var(--primary);
 }
 

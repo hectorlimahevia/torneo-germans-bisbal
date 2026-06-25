@@ -53,6 +53,10 @@ const props = defineProps({
   box-shadow: var(--shadow);
 }
 
+.star-card :hover {
+  background: var(--primary);
+}
+
 .stat-card span {
   display: block;
   font-size: 1.6rem;

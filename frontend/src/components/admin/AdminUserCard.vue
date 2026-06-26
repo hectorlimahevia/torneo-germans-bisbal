@@ -73,7 +73,7 @@ function getVisibleRoles(user) {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 12px;
+  gap: 6px;
   padding: 12px;
   border: 1px solid var(--border);
   border-radius: 12px;

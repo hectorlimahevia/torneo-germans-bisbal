@@ -1,6 +1,12 @@
 <script setup>
 import { ref, nextTick } from 'vue'
+import MarkdownIt from 'markdown-it'
 import api from '@/api/api'
+
+const md = new MarkdownIt({
+  breaks: true,
+  linkify: true,
+})
 
 const isOpen = ref(false)
 const message = ref('')
@@ -11,6 +17,10 @@ const chatBody = ref(null)
 
 function toggleChat() {
   isOpen.value = !isOpen.value
+}
+
+function renderMarkdown(text) {
+  return md.render(text)
 }
 
 async function scrollToBottom() {
@@ -28,10 +38,9 @@ async function scrollToBottom() {
 }
 
 async function sendMessage() {
-  if (!message.value.trim()) {
+  if (loading.value || !message.value.trim()) {
     return
   }
-
   const userMessage = message.value
 
   messages.value.push({
@@ -85,9 +94,7 @@ async function sendMessage() {
           {{ item.role === 'user' ? '🏉' : '🤖' }}
         </div>
 
-        <div class="chat-message" :class="item.role">
-          {{ item.text }}
-        </div>
+        <div class="chat-message" :class="item.role" v-html="renderMarkdown(item.text)"></div>
       </div>
       <p v-if="loading" class="loading-message">Assistant is thinking...</p>
 
@@ -100,9 +107,11 @@ async function sendMessage() {
     </div>
 
     <form class="chat-form" @submit.prevent="sendMessage">
-      <input v-model="message" type="text" placeholder="Ask something..." />
+      <input v-model="message" type="text" placeholder="Ask something..." :disabled="loading" />
 
-      <button type="submit">Send</button>
+      <button type="submit" :disabled="loading || !message.trim()">
+        {{ loading ? '...' : 'Send' }}
+      </button>
     </form>
   </div>
 </template>
@@ -115,15 +124,16 @@ async function sendMessage() {
   z-index: 80;
   width: 60px;
   height: 60px;
-  border: 1px solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.8);
   border-radius: 50%;
   background: var(--primary-light);
   color: white;
   font-size: 28px;
   box-shadow: var(--shadow);
-}
-
-.chat-toggle {
+  cursor: pointer;
   transition:
     transform 0.25s ease,
     box-shadow 0.25s ease;
@@ -131,7 +141,6 @@ async function sendMessage() {
 
 .chat-toggle:hover {
   transform: scale(1.08);
-  overflow: visible;
 }
 
 .chat-toggle img {
@@ -165,31 +174,31 @@ async function sendMessage() {
   position: fixed;
   right: 20px;
   bottom: 90px;
+  z-index: 79;
   width: 340px;
   height: 500px;
-  background: rgb(242, 244, 247);
-  border-radius: 16px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  z-index: 79;
+  background: rgb(242, 244, 247);
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
 }
 
 .chat-header {
+  padding: 16px;
   background: var(--primary-light);
   color: white;
-  padding: 16px;
   font-weight: 800;
 }
 
 .chat-body {
   flex: 1;
-  padding: 16px;
-  overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 10px;
+  padding: 16px;
+  overflow-y: auto;
   color: var(--text-secondary);
 }
 
@@ -212,6 +221,7 @@ async function sendMessage() {
 }
 
 .avatar {
+  flex-shrink: 0;
   width: 28px;
   height: 28px;
   display: flex;
@@ -220,15 +230,15 @@ async function sendMessage() {
   border-radius: 50%;
   background: #eef2f7;
   font-size: 16px;
-  flex-shrink: 0;
 }
 
 .chat-message {
-  max-width: 75%;
+  max-width: 78%;
   padding: 10px 12px;
   border-radius: 14px;
-  line-height: 1.4;
-  font-size: 14px;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  white-space: normal;
 }
 
 .chat-message.user {
@@ -241,6 +251,42 @@ async function sendMessage() {
   background: #f1f3f5;
   color: var(--text-primary);
   border-bottom-left-radius: 4px;
+}
+
+.chat-message p {
+  margin: 0 0 7px;
+}
+
+.chat-message p:last-child {
+  margin-bottom: 0;
+}
+
+.chat-message ul,
+.chat-message ol {
+  margin: 5px 0;
+  padding-left: 18px;
+}
+
+.chat-message li {
+  margin: 2px 0;
+}
+
+.chat-message strong {
+  font-weight: 700;
+}
+
+.chat-message h1,
+.chat-message h2,
+.chat-message h3 {
+  margin: 6px 0;
+  color: var(--primary);
+  font-size: 1rem;
+}
+
+.chat-message code {
+  padding: 2px 5px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.05);
 }
 
 .empty-chat,
@@ -264,27 +310,63 @@ async function sendMessage() {
 
 .chat-form input {
   flex: 1;
+  min-width: 0;
+  padding: 10px 14px;
   border: 1px solid var(--border);
   border-radius: 999px;
-  padding: 10px 14px;
   font-size: 14px;
-  outline: none;
 }
 
 .chat-form input:focus {
+  outline: none;
   border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(18, 60, 105, 0.12);
+}
+
+.chat-form input:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  background: #f3f4f6;
 }
 
 .chat-form button {
+  flex-shrink: 0;
+  padding: 10px 14px;
   border: none;
   border-radius: 999px;
-  padding: 10px 14px;
   background: var(--primary-light);
   color: white;
   font-weight: 800;
   cursor: pointer;
 }
-.chat-form button:hover{
+
+.chat-form button:hover:not(:disabled) {
   background: var(--primary);
+}
+
+.chat-form button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background: var(--primary);
+}
+
+@media (max-width: 480px) {
+  .chat-panel {
+    right: 12px;
+    left: 12px;
+    bottom: 86px;
+    width: auto;
+    height: 500px;
+    max-height: calc(100vh - 120px);
+  }
+
+  .chat-toggle {
+    right: 18px;
+    bottom: 18px;
+  }
+
+  .chat-message {
+    max-width: 82%;
+  }
 }
 </style>

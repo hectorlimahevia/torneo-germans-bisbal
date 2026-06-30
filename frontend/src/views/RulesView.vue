@@ -86,7 +86,7 @@ onMounted(loadRules)
 
 <style scoped>
 .principal-section {
-  margin-top: 6rem;
+  margin-top: 4rem;
 }
 
 h2 {

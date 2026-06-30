@@ -97,7 +97,7 @@ function handleLogout() {
   height: 48px;
   background: white;
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: 32px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   color: var(--primary);
   font-size: 30px;

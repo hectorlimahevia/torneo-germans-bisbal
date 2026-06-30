@@ -39,7 +39,7 @@ const props = defineProps({
 
 <style scoped>
 .auth-layout {
-  margin-top: 6rem;
+  margin-top: 4rem;
   position: relative;
   min-height: 100%;
   display: flex;

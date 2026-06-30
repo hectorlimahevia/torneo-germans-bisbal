@@ -327,9 +327,6 @@ onMounted(loadHomeData)
 }
 
 /* sponsors-section  */
-.sponsors-section {
-  margin-top: 40px;
-}
 
 .sponsors-section h2 {
   color: var(--primary);

@@ -39,7 +39,7 @@ const { toasts, removeToast } = useToast()
   background: white;
   border-radius: 12px;
   box-shadow: var(--shadow);
-  border-left: 5px solid var(--primary);
+  border-left: 3px solid var(--primary);
 }
 
 .toast.error {

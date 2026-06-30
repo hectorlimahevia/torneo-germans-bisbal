@@ -59,7 +59,7 @@ onMounted(loadStandings)
 <style scoped>
 
 .principal-section{
-  margin-top: 6rem;
+  margin-top: 4rem;
 }
 h2 {
   color: var(--primary);

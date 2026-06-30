@@ -9,22 +9,29 @@ const username = ref('james')
 const password = ref('1234')
 const message = ref('')
 const router = useRouter()
+const showPassword = ref(false)
 
 //funcion para el login
 async function login() {
+  if (!username.value.trim() || !password.value.trim()) {
+    message.value = 'Please enter username and password'
+    return
+  }
+
   try {
     const response = await api.post('/api/login', {
       username: username.value,
       password: password.value,
     })
 
-    console.log(response.data)
     saveLogin(response.data.access_token)
+
     message.value = 'Login successful'
+
     router.push('/')
-    message.value = 'Login successful'
   } catch (error) {
     console.error(error)
+
     message.value = 'Invalid credentials'
   }
 }
@@ -42,7 +49,19 @@ async function login() {
       <div class="form-group">
         <label for="password">Password</label>
 
-        <input id="password" v-model="password" type="password" />
+        <div class="password-wrapper">
+          <input id="password" v-model="password" :type="showPassword ? 'text' : 'password'" />
+
+          <button
+            type="button"
+            class="password-toggle"
+            @click="showPassword = !showPassword"
+            :aria-label="showPassword ? 'Hide password' : 'Show password'"
+            :title="showPassword ? 'Hide password' : 'Show password'"
+          >
+            <i :class="showPassword ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'"></i>
+          </button>
+        </div>
       </div>
 
       <button type="submit" class="register-button">Login</button>
@@ -124,5 +143,28 @@ async function login() {
 .guest-link:hover,
 .register-link:hover {
   color: var(--primary-light);
+}
+
+.password-wrapper {
+  position: relative;
+}
+
+.password-wrapper input {
+  padding-right: 48px;
+}
+
+.password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 14px;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  color: var(--primary);
+  font-size: 1rem;
+  cursor: pointer;
 }
 </style>

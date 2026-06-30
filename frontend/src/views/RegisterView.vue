@@ -90,8 +90,14 @@ function isValidPassword(password) {
             placeholder="Choose a password"
           />
 
-          <button type="button" class="password-toggle" @click="showPassword = !showPassword">
-            <i :class="showConfirmPassword ? 'fa-solid fa-eye' : 'fa-solid fa-eye-slash'" />
+          <button
+            type="button"
+            class="password-toggle"
+            @click="showPassword = !showPassword"
+            :aria-label="showPassword ? 'Hide password' : 'Show password'"
+            :title="showPassword ? 'Hide password' : 'Show password'"
+          >
+            <i :class="showPassword ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'"></i>
           </button>
         </div>
       </div>
@@ -111,8 +117,10 @@ function isValidPassword(password) {
             type="button"
             class="password-toggle"
             @click="showConfirmPassword = !showConfirmPassword"
+            :aria-label="showConfirmPassword ? 'Hide password' : 'Show password'"
+            :title="showConfirmPassword ? 'Hide password' : 'Show password'"
           >
-            <i :class="showConfirmPassword ? 'fa-solid fa-eye' : 'fa-solid fa-eye-slash'" />
+            <i :class="showConfirmPassword ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'"></i>
           </button>
         </div>
       </div>

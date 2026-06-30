@@ -61,7 +61,7 @@ onMounted(loadTeams)
 .principal-section {
   display: flex;
   flex-direction: column;
-  margin-top: 6rem;
+  margin-top: 4rem;
   gap: 16px;
 }
 

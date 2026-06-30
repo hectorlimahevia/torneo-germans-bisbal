@@ -40,6 +40,11 @@ const confirmConfig = ref({
   id: null,
 })
 
+const roleAction = ref({
+  type: '',
+  user: null,
+})
+
 const { showToast } = useToast()
 
 async function loadData() {
@@ -230,40 +235,89 @@ function closeConfirmModal() {
     type: '',
     id: null,
   }
+
+  resetRoleAction()
 }
 
-async function makeAdmin(user) {
-  try {
-    await api.post('/api/roles/add-to-user', {
-      username: user.username,
-      roleName: 'ROLE_ADMIN',
-    })
+function makeAdmin(user) {
+  roleAction.value = {
+    type: 'make-admin',
+    user,
+  }
 
-    showToast('Admin role assigned successfully', 'success')
+  confirmConfig.value = {
+    type: 'role',
+    id: user.id,
+  }
+
+  showConfirmModal.value = true
+}
+
+function removeAdmin(user) {
+  roleAction.value = {
+    type: 'remove-admin',
+    user,
+  }
+
+  confirmConfig.value = {
+    type: 'role',
+    id: user.id,
+  }
+
+  showConfirmModal.value = true
+}
+
+async function confirmRoleAction() {
+  const user = roleAction.value.user
+
+  if (!user) {
+    return
+  }
+
+  try {
+    if (roleAction.value.type === 'make-admin') {
+      await api.post('/api/roles/add-to-user', {
+        username: user.username,
+        roleName: 'ROLE_ADMIN',
+      })
+
+      showToast('Admin role assigned successfully', 'success')
+    }
+
+    if (roleAction.value.type === 'remove-admin') {
+      await api.post('/api/roles/remove-from-user', {
+        username: user.username,
+        roleName: 'ROLE_ADMIN',
+      })
+
+      showToast('Admin role removed successfully', 'success')
+    }
+
+    closeConfirmModal()
+    resetRoleAction()
 
     await loadData()
   } catch (err) {
     console.error(err)
 
-    showToast(getErrorMessage(err, 'Could not assign admin role'), 'error')
+    showToast(getErrorMessage(err, 'Could not update user role'), 'error')
   }
 }
 
-async function removeAdmin(user) {
-  try {
-    await api.post('/api/roles/remove-from-user', {
-      username: user.username,
-      roleName: 'ROLE_ADMIN',
-    })
-
-    showToast('Admin role removed successfully', 'success')
-
-    await loadData()
-  } catch (err) {
-    console.error(err)
-
-    showToast(getErrorMessage(err, 'Could not remove admin role'), 'error')
+function resetRoleAction() {
+  roleAction.value = {
+    type: '',
+    user: null,
   }
+}
+
+async function handleConfirmModal() {
+  if (confirmConfig.value.type === 'role') {
+    await confirmRoleAction()
+    return
+  }
+
+  await confirmDelete()
 }
 
 onMounted(loadData)
@@ -326,17 +380,35 @@ onMounted(loadData)
 
     <ConfirmModal
       v-if="showConfirmModal"
-      :title="confirmConfig.type === 'field' ? 'Delete Field' : 'Delete Match'"
-      :message="
-        confirmConfig.type === 'field'
-          ? 'Are you sure you want to delete this field? This action cannot be undone.'
-          : 'Are you sure you want to delete this match? This action cannot be undone.'
+      :title="
+        confirmConfig.type === 'role'
+          ? roleAction.type === 'make-admin'
+            ? 'Make Admin'
+            : 'Remove Admin'
+          : confirmConfig.type === 'field'
+            ? 'Delete Field'
+            : 'Delete Match'
       "
-      confirm-text="Delete"
+      :message="
+        confirmConfig.type === 'role'
+          ? roleAction.type === 'make-admin'
+            ? `Are you sure you want to make ${roleAction.user?.name} an admin?`
+            : `Are you sure you want to remove admin permissions from ${roleAction.user?.name}?`
+          : confirmConfig.type === 'field'
+            ? 'Are you sure you want to delete this field? This action cannot be undone.'
+            : 'Are you sure you want to delete this match? This action cannot be undone.'
+      "
+      :confirm-text="
+        confirmConfig.type === 'role'
+          ? roleAction.type === 'make-admin'
+            ? 'Make Admin'
+            : 'Remove Admin'
+          : 'Delete'
+      "
       cancel-text="Cancel"
-      :danger="true"
+      :danger="confirmConfig.type === 'role' ? roleAction.type === 'remove-admin' : true"
       :is-loading="loading.deleteItem"
-      @confirm="confirmDelete"
+      @confirm="handleConfirmModal"
       @cancel="closeConfirmModal"
     />
   </section>

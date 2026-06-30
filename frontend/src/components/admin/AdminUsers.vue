@@ -90,70 +90,108 @@ function isAdmin(user) {
 
 <style scoped>
 .users-card {
+  width: 100%;
+  max-width: 900px;
+  margin: 32px auto;
+  padding: 28px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  background: var(--card);
+  gap: 20px;
+  background: #f5f7f8;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
 }
 
 .users-header h3 {
   margin: 0;
   color: var(--primary);
+  font-size: 1.35rem;
+  font-weight: 900;
 }
 
 .users-header p {
   margin: 6px 0 0;
   color: var(--text-secondary);
-  font-size: 0.9rem;
-}
-
-.users-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.user-section {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-top: 16px;
+  font-size: 0.95rem;
 }
 
 .user-search {
+  margin-top: 3%;
   display: flex;
-  margin-top: 12px;
   align-items: center;
   gap: 10px;
   padding: 12px 14px;
-  background: white;
+  background: #f8fafc;
   border: 1px solid var(--border);
   border-radius: 999px;
-  box-shadow: var(--shadow-sm);
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
+
+.user-search:focus-within {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(18, 60, 105, 0.15);
+}
+
 
 .user-search i {
   color: var(--primary);
   font-size: 1rem;
 }
 
-.user-search input {
-  width: 100%;
+.user-search input,
+.user-search input:focus {
+  flex: 1;
   border: none;
   outline: none;
-  font-size: 0.95rem;
-  font-family: inherit;
+  box-shadow: none;
   background: transparent;
+  font-family: inherit;
+}
+
+.users-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.user-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .user-section h4 {
   display: flex;
   align-items: center;
   gap: 8px;
-
+  margin: 0;
   color: var(--primary);
   font-size: 1.05rem;
-  font-weight: 800;
+  font-weight: 900;
 }
 
+.empty-message {
+  margin: 0;
+  padding: 12px;
+  color: var(--text-secondary);
+  border: 1px dashed var(--border);
+  border-radius: 12px;
+  background: #f8fafc;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+  .users-card {
+    margin: 24px 0;
+    padding: 0;
+
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+  }
+}
 </style>

@@ -1,0 +1,116 @@
+.admin-form {
+  width: 100%;
+  max-width: 860px;
+  margin: 32px auto;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  background: #f5f7f8;;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+}
+
+.admin-form h3 {
+  margin: 0 0 8px;
+  color: var(--primary);
+  font-size: 1.35rem;
+  font-weight: 900;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  color: var(--primary);
+  font-weight: 800;
+}
+
+.form-group select,
+.form-group input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: white;
+  font-family: inherit;
+  font-size: 0.95rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.create-button,
+.update-button,
+.delete-button {
+  align-self: center;
+  width: 220px;
+  margin-top: 8px;
+  padding: 12px 18px;
+  border: none;
+  border-radius: 999px;
+  color: white;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.create-button,
+.update-button {
+  background: var(--primary);
+}
+
+.delete-button {
+  background: #dc2626;
+}
+
+.create-button:hover,
+.update-button:hover {
+  background: var(--primary-light);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+.delete-button:hover {
+  background: #b91c1c;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+.create-button:disabled,
+.update-button:disabled,
+.delete-button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+@media (max-width: 768px) {
+  .admin-form {
+    margin: 24px 0;
+    padding: 0;
+
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .create-button,
+  .update-button,
+  .delete-button {
+    width: 100%;
+    max-width: 260px;
+  }
+}

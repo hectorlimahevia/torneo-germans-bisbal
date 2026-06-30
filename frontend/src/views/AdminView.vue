@@ -1,6 +1,5 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-
 import api from '@/api/api'
 
 import AdminStats from '@/components/admin/AdminStats.vue'
@@ -324,106 +323,133 @@ onMounted(loadData)
 </script>
 
 <template>
-  <section>
-    <h2>Admin Panel</h2>
+  <section class="admin-view">
+    <div class="app-container">
+      <header class="admin-header">
+        <span class="admin-kicker">Dashboard</span>
+        <h2>Admin Panel</h2>
+        <p>Manage matches, fields, users and tournament data.</p>
+      </header>
 
-    <AdminStats
-      :matches-count="matches.length"
-      :teams-count="teams.length"
-      :fields-count="fields.length"
-    />
+      <AdminStats
+        :matches-count="matches.length"
+        :teams-count="teams.length"
+        :fields-count="fields.length"
+      />
 
-    <AdminChart :matches="matches" />
+      <AdminChart :matches="matches" />
 
-    <AdminTabs :selected-tab="selectedAdminTab" @tab-selected="selectedAdminTab = $event" />
+      <AdminTabs :selected-tab="selectedAdminTab" @tab-selected="selectedAdminTab = $event" />
 
-    <ScheduleMatchForm
-      v-if="selectedAdminTab === 'create'"
-      :key="scheduleResetKey"
-      :teams="teams"
-      :fields="fields"
-      :reset-key="scheduleResetKey"
-      :is-loading="loading.createMatch"
-      @match-created="createMatch"
-    />
+      <ScheduleMatchForm
+        v-if="selectedAdminTab === 'create'"
+        :key="scheduleResetKey"
+        :teams="teams"
+        :fields="fields"
+        :reset-key="scheduleResetKey"
+        :is-loading="loading.createMatch"
+        @match-created="createMatch"
+      />
 
-    <UpdateMatchForm
-      v-if="selectedAdminTab === 'update'"
-      :key="updateResetKey"
-      :matches="matches"
-      :reset-key="updateResetKey"
-      :is-loading="loading.updateMatch"
-      @match-updated="updateMatch"
-      @match-deleted="deleteMatch"
-    />
+      <UpdateMatchForm
+        v-if="selectedAdminTab === 'update'"
+        :key="updateResetKey"
+        :matches="matches"
+        :reset-key="updateResetKey"
+        :is-loading="loading.updateMatch"
+        @match-updated="updateMatch"
+        @match-deleted="deleteMatch"
+      />
 
-    <CreateFieldForm
-      v-if="selectedAdminTab === 'field'"
-      :key="fieldResetKey"
-      :fields="fields"
-      :reset-key="fieldResetKey"
-      :is-loading="loading.createField"
-      @field-created="createField"
-      @field-deleted="deleteField"
-    />
+      <CreateFieldForm
+        v-if="selectedAdminTab === 'field'"
+        :key="fieldResetKey"
+        :fields="fields"
+        :reset-key="fieldResetKey"
+        :is-loading="loading.createField"
+        @field-created="createField"
+        @field-deleted="deleteField"
+      />
 
-    <AdminUsers
-      v-if="selectedAdminTab === 'users'"
-      :users="users"
-      @make-admin="makeAdmin"
-      @remove-admin="removeAdmin"
-    />
+      <AdminUsers
+        v-if="selectedAdminTab === 'users'"
+        :users="users"
+        @make-admin="makeAdmin"
+        @remove-admin="removeAdmin"
+      />
 
-    <p v-if="error" class="error-message">
-      {{ error }}
-    </p>
+      <p v-if="error" class="error-message">
+        {{ error }}
+      </p>
 
-    <ConfirmModal
-      v-if="showConfirmModal"
-      :title="
-        confirmConfig.type === 'role'
-          ? roleAction.type === 'make-admin'
-            ? 'Make Admin'
-            : 'Remove Admin'
-          : confirmConfig.type === 'field'
-            ? 'Delete Field'
-            : 'Delete Match'
-      "
-      :message="
-        confirmConfig.type === 'role'
-          ? roleAction.type === 'make-admin'
-            ? `Are you sure you want to make ${roleAction.user?.name} an admin?`
-            : `Are you sure you want to remove admin permissions from ${roleAction.user?.name}?`
-          : confirmConfig.type === 'field'
-            ? 'Are you sure you want to delete this field? This action cannot be undone.'
-            : 'Are you sure you want to delete this match? This action cannot be undone.'
-      "
-      :confirm-text="
-        confirmConfig.type === 'role'
-          ? roleAction.type === 'make-admin'
-            ? 'Make Admin'
-            : 'Remove Admin'
-          : 'Delete'
-      "
-      cancel-text="Cancel"
-      :danger="confirmConfig.type === 'role' ? roleAction.type === 'remove-admin' : true"
-      :is-loading="loading.deleteItem"
-      @confirm="handleConfirmModal"
-      @cancel="closeConfirmModal"
-    />
+      <ConfirmModal
+        v-if="showConfirmModal"
+        :title="
+          confirmConfig.type === 'role'
+            ? roleAction.type === 'make-admin'
+              ? 'Make Admin'
+              : 'Remove Admin'
+            : confirmConfig.type === 'field'
+              ? 'Delete Field'
+              : 'Delete Match'
+        "
+        :message="
+          confirmConfig.type === 'role'
+            ? roleAction.type === 'make-admin'
+              ? `Are you sure you want to make ${roleAction.user?.name} an admin?`
+              : `Are you sure you want to remove admin permissions from ${roleAction.user?.name}?`
+            : confirmConfig.type === 'field'
+              ? 'Are you sure you want to delete this field? This action cannot be undone.'
+              : 'Are you sure you want to delete this match? This action cannot be undone.'
+        "
+        :confirm-text="
+          confirmConfig.type === 'role'
+            ? roleAction.type === 'make-admin'
+              ? 'Make Admin'
+              : 'Remove Admin'
+            : 'Delete'
+        "
+        cancel-text="Cancel"
+        :danger="confirmConfig.type === 'role' ? roleAction.type === 'remove-admin' : true"
+        :is-loading="loading.deleteItem"
+        @confirm="handleConfirmModal"
+        @cancel="closeConfirmModal"
+      />
+    </div>
   </section>
 </template>
 
 <style scoped>
-section {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+.admin-view {
+  min-height: 100vh;
+  padding: 32px 0 48px;
 }
 
-h2 {
-  margin-top: 4rem;
+.admin-header {
+  margin-bottom: 8px;
+}
+
+.admin-kicker {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--primary-light);
+  font-size: 0.8rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.admin-header h2 {
+  margin: 0;
   color: var(--primary);
+  font-size: 2rem;
+  font-weight: 900;
+}
+
+.admin-header p {
+  margin: 8px 0 0;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
 }
 
 .error-message {

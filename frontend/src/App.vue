@@ -70,7 +70,6 @@ function handleLogout() {
 
 <style scoped>
 .app {
-  margin-top: 3rem;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -106,6 +105,13 @@ function handleLogout() {
   align-items: center;
   justify-content: center;
   cursor: pointer;
+}
+
+.menu-button:hover{
+    background:var(--primary);
+    color: #fff;
+      width: 49px;
+  height: 49px;
 }
 
 .menu-button.open {

@@ -30,7 +30,7 @@ const props = defineProps({
     </div>
 
     <div class="stat-card">
-       <i class="fas fa-location-dot"></i>
+      <i class="fas fa-location-dot"></i>
       <span>{{ props.fieldsCount }}</span>
       <p>Fields</p>
     </div>
@@ -42,24 +42,31 @@ const props = defineProps({
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 12px;
+  margin-bottom: 2rem;
 }
 
 .stat-card {
   background: var(--primary-light);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 12px;
+  padding: 18px 12px;
   text-align: center;
   box-shadow: var(--shadow);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
 }
 
-.star-card :hover {
+.stat-card:hover {
+  transform: translateY(-3px);
   background: var(--primary);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
 .stat-card span {
   display: block;
-  font-size: 1.6rem;
+  font-size: 2rem;
   font-weight: 800;
   color: #fff;
 }
@@ -74,6 +81,27 @@ const props = defineProps({
 .fa-location-dot,
 .fa-people-group {
   color: #fff;
-  font-size: 1.5rem;
+  font-size: 1.7rem;
+  margin-bottom: 6px;
+}
+
+.admin-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+@media (min-width: 768px) {
+  .admin-stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .admin-stats {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
 }
 </style>

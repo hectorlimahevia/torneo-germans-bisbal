@@ -58,107 +58,117 @@ onMounted(loadHomeData)
 
 <template>
   <section class="home">
-    <section class="home-hero">
-      <img src="@/assets/logo_ues.png" alt="Torneo Germans Bisbal" class="hero-logo" />
+    <div class="app-container">
+      <section class="home-hero">
+        <img src="@/assets/logo_ues.png" alt="Torneo Germans Bisbal" class="hero-logo" />
 
-      <div class="hero-title">
-        <span class="hero-kicker"> TORNEO </span>
+        <div class="hero-title">
+          <span class="hero-kicker"> TORNEO </span>
 
-        <h1>
-          GERMANS<br />
-          BISBAL
-        </h1>
+          <h1>
+            GERMANS<br />
+            BISBAL
+          </h1>
 
-        <p class="hero-slogan">PASSIÓ PEL RUGBY</p>
-      </div>
-    </section>
-
-    <div class="quick-nav">
-      <RouterLink to="/standings"> Standings </RouterLink>
-
-      <RouterLink to="/matches"> Matches </RouterLink>
-
-      <RouterLink to="/teams"> Teams </RouterLink>
-
-      <RouterLink to="/rules"> Rules </RouterLink>
-    </div>
-
-    <section class="home-section">
-      <div class="section-header">
-        <h2>Latest Matches</h2>
-        <RouterLink to="/matches">View all</RouterLink>
-      </div>
-
-      <div class="mini-list">
-        <div v-for="match in matches" :key="match.id" class="mini-card">
-          <strong> {{ match.localTeam.name }} vs {{ match.visitorTeam.name }} </strong>
-
-          <span> {{ match.field.name }} · {{ match.startTime.substring(0, 5) }} </span>
+          <p class="hero-slogan">PASSIÓ PEL RUGBY</p>
         </div>
+      </section>
+
+      <div class="quick-nav">
+        <RouterLink to="/standings"> Standings </RouterLink>
+
+        <RouterLink to="/matches"> Matches </RouterLink>
+
+        <RouterLink to="/teams"> Teams </RouterLink>
+
+        <RouterLink to="/rules"> Rules </RouterLink>
       </div>
-    </section>
 
-    <section class="poster-section">
-      <img
-        src="@/assets/cartel_torneo.jpg"
-        alt="Torneo Germans Bisbal poster"
-        class="poster-image"
-      />
-    </section>
+      <section class="home-section">
+        <div class="section-header">
+          <h2>Latest Matches</h2>
+          <RouterLink to="/matches">View all</RouterLink>
+        </div>
 
-    <section class="about-section">
-      <h2>About the Tournament</h2>
+        <div class="mini-list">
+          <div v-for="match in matches" :key="match.id" class="mini-card">
+            <strong> {{ match.localTeam.name }} vs {{ match.visitorTeam.name }} </strong>
 
-      <p>
-        The Germans Bisbal Tournament is a celebration of grassroots rugby, sportsmanship and
-        teamwork. Organised by the U.E. Santboiana rugby school, it brings together young players
-        from different clubs to enjoy a day of competition, friendship and rugby values.
-      </p>
+            <div class="match-meta">
+              <span>
+                <i class="fa-solid fa-location-dot"></i>
+                {{ match.field.name }}
+              </span>
 
-      <p>
-        U.E. Santboiana is one of the most historic rugby clubs in Spain and has played a key role
-        in the development of rugby for generations. The tournament reflects this commitment to
-        education, respect and passion for the sport.
-      </p>
-    </section>
+              <span>
+                <i class="fa-regular fa-clock"></i>
+                {{ match.startTime?.slice(0, 5) }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="about-section">
+        <h2>About the Tournament</h2>
 
-    <section class="sponsors-section">
-      <h2>Sponsors</h2>
+        <p>
+          The Germans Bisbal Tournament is a celebration of grassroots rugby, sportsmanship and
+          teamwork. Organised by the U.E. Santboiana rugby school, it brings together young players
+          from different clubs to enjoy a day of competition, friendship and rugby values.
+        </p>
 
-      <div class="coverflow-carousel">
-        <button type="button" class="carousel-arrow left" @click="previousSponsor">‹</button>
+        <p>
+          U.E. Santboiana is one of the most historic rugby clubs in Spain and has played a key role
+          in the development of rugby for generations. The tournament reflects this commitment to
+          education, respect and passion for the sport.
+        </p>
+      </section>
+      <section class="poster-section">
+        <img
+          src="@/assets/cartel_torneo.jpg"
+          alt="Torneo Germans Bisbal poster"
+          class="poster-image"
+        />
+      </section>
 
-        <div class="sponsor-stage">
-          <article
+      <section class="sponsors-section">
+        <h2>Sponsors</h2>
+
+        <div class="coverflow-carousel">
+          <button type="button" class="carousel-arrow left" @click="previousSponsor">‹</button>
+
+          <div class="sponsor-stage">
+            <article
+              v-for="(sponsor, index) in sponsors"
+              :key="sponsor.name"
+              class="sponsor-card"
+              :class="getSponsorClass(index)"
+            >
+              <img :src="sponsor.logo" :alt="sponsor.name" />
+
+              <span>{{ sponsor.name }}</span>
+            </article>
+          </div>
+
+          <button type="button" class="carousel-arrow right" @click="nextSponsor">›</button>
+        </div>
+
+        <div class="carousel-dots">
+          <button
             v-for="(sponsor, index) in sponsors"
             :key="sponsor.name"
-            class="sponsor-card"
-            :class="getSponsorClass(index)"
-          >
-            <img :src="sponsor.logo" :alt="sponsor.name" />
-
-            <span>{{ sponsor.name }}</span>
-          </article>
+            type="button"
+            class="dot"
+            :class="{ active: currentSponsor === index }"
+            @click="goToSponsor(index)"
+          />
         </div>
+      </section>
 
-        <button type="button" class="carousel-arrow right" @click="nextSponsor">›</button>
-      </div>
-
-      <div class="carousel-dots">
-        <button
-          v-for="(sponsor, index) in sponsors"
-          :key="sponsor.name"
-          type="button"
-          class="dot"
-          :class="{ active: currentSponsor === index }"
-          @click="goToSponsor(index)"
-        />
-      </div>
-    </section>
-
-    <p v-if="error">
-      {{ error }}
-    </p>
+      <p v-if="error">
+        {{ error }}
+      </p>
+    </div>
   </section>
 </template>
 
@@ -239,43 +249,84 @@ onMounted(loadHomeData)
 }
 
 .section-header h2 {
-  margin: 0;
+  margin-top: 2rem;
   color: var(--primary);
   font-size: 20px;
 }
 
 .section-header a {
-  color: var(--primary);
+  margin-top: 1rem;
+  color: var(--primary-light);
   font-weight: 700;
   text-decoration: none;
   font-size: 14px;
 }
 
-.mini-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+.section-header a:hover {
+  color: var(--primary);
+  font-size: 18px;
 }
 
-.mini-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  padding: 14px;
-
+.match-meta {
   display: flex;
   flex-direction: column;
   gap: 6px;
+
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.match-meta span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.match-meta i {
+  width: 14px;
+  color: var(--primary-light);
+}
+
+.mini-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.mini-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 5px;
+  padding: 18px;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  border: 1px solid var(--primary-light);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.mini-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 5px;
+  height: 100%;
+  background: var(--primary-light);
 }
 
 .mini-card strong {
   color: var(--primary);
+  font-size: 1rem;
+  line-height: 1.35;
 }
 
 .mini-card span {
   color: var(--text-secondary);
-  font-size: 14px;
+
+  font-size: 0.9rem;
 }
 
 .quick-nav {
@@ -311,7 +362,9 @@ onMounted(loadHomeData)
 /* about-section  */
 
 .about-section {
+  margin-top: 3rem;
   padding: 8px;
+  max-width: 1000px;
 }
 
 .about-section h2 {
@@ -321,7 +374,7 @@ onMounted(loadHomeData)
 }
 
 .about-section p {
-  line-height: 1.6;
+  line-height: 1.8;
 
   color: var(--text-secondary);
 }
@@ -394,14 +447,14 @@ onMounted(loadHomeData)
   z-index: 2;
   opacity: 0.55;
   transform: translateX(-28%) scale(0.85);
-  background: #f1f2f3;
+  background: #fcfdfd;
 }
 
 .sponsor-card.next {
   z-index: 2;
   opacity: 0.55;
   transform: translateX(28%) scale(0.85);
-  background: #f1f2f3;
+  background: #fcfdfd;
 }
 
 .sponsor-card.hidden {
@@ -465,5 +518,64 @@ onMounted(loadHomeData)
 .dot.active {
   width: 22px;
   background: var(--primary);
+}
+
+@media (min-width: 1024px) {
+  .sponsors-section {
+    margin-top: 72px;
+    margin-bottom: 80px;
+  }
+
+  .coverflow-carousel {
+    max-width: 920px;
+    margin: 32px auto 0;
+  }
+
+  .sponsor-stage {
+    height: 420px;
+  }
+
+  .sponsor-card {
+    width: 460px;
+    max-width: 460px;
+    height: 315px;
+  }
+
+  .sponsor-card img {
+    max-width: 350px;
+    max-height: 180px;
+  }
+
+  .sponsor-card.previous {
+    transform: translateX(-45%) scale(0.86);
+  }
+
+  .sponsor-card.next {
+    transform: translateX(45%) scale(0.86);
+  }
+
+  .carousel-arrow {
+    width: 38px;
+    height: 38px;
+    font-size: 24px;
+  }
+
+  .carousel-arrow.left {
+    left: 0;
+  }
+
+  .carousel-arrow.right {
+    right: 0;
+  }
+
+  .mini-list {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+  }
+
+  .mini-card {
+    min-height: 145px;
+    padding: 20px;
+  }
 }
 </style>

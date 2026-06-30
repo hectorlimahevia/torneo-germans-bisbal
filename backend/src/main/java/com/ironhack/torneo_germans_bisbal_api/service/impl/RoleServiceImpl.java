@@ -1,5 +1,6 @@
 package com.ironhack.torneo_germans_bisbal_api.service.impl;
 
+import com.ironhack.torneo_germans_bisbal_api.exception.LastAdminRemovalException;
 import com.ironhack.torneo_germans_bisbal_api.model.Role;
 import com.ironhack.torneo_germans_bisbal_api.model.User;
 import com.ironhack.torneo_germans_bisbal_api.repository.RoleRepository;
@@ -59,6 +60,17 @@ public class RoleServiceImpl implements RoleService {
 
         User user = userRepository.findByUsername(username);
         Role role = roleRepository.findByName(roleName);
+
+        if ("ROLE_ADMIN".equals(roleName)) {
+
+            long adminCount = userRepository.countByRolesName("ROLE_ADMIN");
+
+            if (adminCount <= 1) {
+                throw new LastAdminRemovalException(
+                        "The last administrator cannot be removed."
+                );
+            }
+        }
 
         user.getRoles().remove(role);
 

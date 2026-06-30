@@ -34,4 +34,16 @@ public class GlobalExceptionHandler {
                         exception.getMessage()
                 ));
     }
+
+    @ExceptionHandler(LastAdminRemovalException.class)
+    public ResponseEntity<Map<String, String>> handleLastAdminRemovalException(
+            LastAdminRemovalException exception) {
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(Map.of(
+                        "message",
+                        exception.getMessage()
+                ));
+    }
 }

@@ -87,6 +87,7 @@ function formatDifference(value) {
   background: #264157;
   border-radius: 999px;
   padding: 6px 10px;
+  border: 2px solid #3f79d1;
   font-size: 14px;
   font-weight: 900;
 }

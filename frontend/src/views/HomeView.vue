@@ -5,11 +5,11 @@ import autovivoLogo from '@/assets/autovivo_logo.jpg'
 import bitmatLogo from '@/assets/bitmat_logo.png'
 import neopequesLogo from '@/assets/neopeques_logo.png'
 import lecoqLogo from '@/assets/lecoq_logo.jpg'
+import { useToast } from '@/composables/useToast'
 import api from '@/api/api'
 
 const matches = ref([])
-const error = ref('')
-
+const { showToast } = useToast()
 const sponsors = [
   { name: 'Autovivo', logo: autovivoLogo },
   { name: 'Bitmat', logo: bitmatLogo },
@@ -50,7 +50,7 @@ async function loadHomeData() {
     matches.value = matchesResponse.data.slice(0, 3)
   } catch (err) {
     console.error(err)
-    error.value = 'Could not load home data'
+    showToast('Could not load ...', 'error')
   }
 }
 onMounted(loadHomeData)
@@ -164,10 +164,6 @@ onMounted(loadHomeData)
           />
         </div>
       </section>
-
-      <p v-if="error">
-        {{ error }}
-      </p>
     </div>
   </section>
 </template>
@@ -299,7 +295,7 @@ onMounted(loadHomeData)
   flex-direction: column;
   justify-content: space-between;
   gap: 5px;
-  padding: 18px;
+  padding: 20px;
   background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
   border: 1px solid var(--primary-light);
   border-radius: var(--radius);
@@ -312,7 +308,7 @@ onMounted(loadHomeData)
   position: absolute;
   left: 0;
   top: 0;
-  width: 5px;
+  width: 10px;
   height: 100%;
   background: var(--primary-light);
 }
@@ -325,7 +321,6 @@ onMounted(loadHomeData)
 
 .mini-card span {
   color: var(--text-secondary);
-
   font-size: 0.9rem;
 }
 

@@ -2,12 +2,12 @@
 import { ref, onMounted, computed } from 'vue'
 import api from '@/api/api'
 import CategoryTabs from '@/components/CategoryTabs.vue'
-import StatusBadge from '@/components/StatusBadge.vue'
 import MatchCard from '@/components/MatchCard.vue'
 import { CATEGORIES } from '@/constants/categories.js'
+import { useToast } from '@/composables/useToast'
 
 const matches = ref([])
-const error = ref('')
+const { showToast } = useToast()
 const categories = CATEGORIES
 
 const selectedCategory = ref('SUB6')
@@ -27,9 +27,8 @@ async function loadMatches() {
   try {
     const response = await api.get('/api/matches')
     matches.value = response.data
-  } catch (err) {
-    console.error(err)
-    error.value = 'Could not load matches'
+  } catch {
+    showToast('Could not load matches.', 'error')
   }
 }
 onMounted(loadMatches)
@@ -37,33 +36,33 @@ onMounted(loadMatches)
 
 <template>
   <section class="principal-section">
-    <h2>Matches</h2>
+    <div class="app-container">
+      <h2>Matches</h2>
 
-    <p v-if="error">
-      {{ error }}
-    </p>
+      <CategoryTabs
+        :categories="categories"
+        :selected-category="selectedCategory"
+        @category-selected="selectedCategory = $event"
+      />
 
-    <CategoryTabs
-      :categories="categories"
-      :selected-category="selectedCategory"
-      @category-selected="selectedCategory = $event"
-    />
-
-    <MatchCard v-for="match in filteredMatches" :key="match.id" :match="match" />
+      <MatchCard v-for="match in filteredMatches" :key="match.id" :match="match" />
+    </div>
   </section>
 </template>
 
 <style scoped>
 .principal-section {
-  margin-top: 4rem;
+  margin-top: 5rem;
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
 
+.match-card {
+  margin: 4%;
+}
 h2 {
   color: var(--primary);
   margin-bottom: 16px;
 }
-
 </style>

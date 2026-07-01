@@ -11,7 +11,6 @@ const message = ref('')
 const router = useRouter()
 const showPassword = ref(false)
 
-//funcion para el login
 async function login() {
   if (!username.value.trim() || !password.value.trim()) {
     message.value = 'Please enter username and password'
@@ -38,7 +37,7 @@ async function login() {
 </script>
 
 <template>
-  <AuthLayout title="Create Account" subtitle="Join the tournament experience">
+  <AuthLayout title="Login" subtitle="Join the tournament experience">
     <form @submit.prevent="login" class="register-form">
       <div class="form-group">
         <label for="username">Username</label>

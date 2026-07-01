@@ -1,9 +1,10 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import api from '@/api/api'
+import { useToast } from '@/composables/useToast'
 
 const rules = ref([])
-const error = ref('')
+const { showToast } = useToast()
 const selectedRuleType = ref('scoring')
 
 const scoringRules = computed(() => {
@@ -22,9 +23,8 @@ async function loadRules() {
   try {
     const response = await api.get('/api/rules')
     rules.value = response.data
-  } catch (err) {
-    console.error(err)
-    error.value = 'Could not load rules'
+  } catch {
+    showToast('Could not load rules', 'error')
   }
 }
 
@@ -33,60 +33,59 @@ onMounted(loadRules)
 
 <template>
   <section class="principal-section">
-    <h2>Rules</h2>
+    <div class="app-container">
+      <h2>Rules</h2>
 
-    <p>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam interdum massa vitae metus
-      feugiat consectetur. Nam hendrerit cursus quam sed lacinia. Curabitur diam ex, condimentum
-      eleifend magna eget, scelerisque imperdiet dui. Phasellus egestas arcu id aliquam ornare. Nunc
-      a erat et purus tristique euismod. Aenean magna dui, faucibus vitae justo sollicitudin,
-      hendrerit imperdiet tellus. Integer ipsum nisl, ultricies ac lobortis id, finibus at augue.
-
-    </p>
-
-    <div class="rule-tabs">
-      <button
-        type="button"
-        :class="{ active: selectedRuleType === 'scoring' }"
-        @click="selectedRuleType = 'scoring'"
-      ><i class="fa-solid fa-medal"></i>
-        Scoring System
-      </button>
-
-      <button
-        type="button"
-        :class="{ active: selectedRuleType === 'schedule' }"
-        @click="selectedRuleType = 'schedule'"
-      ><i class="fas fa-calendar-days"></i>
-        Category Schedule
-      </button>
-    </div>
-
-    <p v-if="error">
-      {{ error }}
-    </p>
-
-    <div v-for="rule in filteredRules" :key="rule.id" class="rule-card">
-      <div class="rule-header">
-        {{ rule.title }}
-      </div>
-
-      <p class="rule-description">
-        {{ rule.description }}
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam interdum massa vitae metus
+        feugiat consectetur. Nam hendrerit cursus quam sed lacinia. Curabitur diam ex, condimentum
+        eleifend magna eget, scelerisque imperdiet dui. Phasellus egestas arcu id aliquam ornare.
+        Nunc a erat et purus tristique euismod. Aenean magna dui, faucibus vitae justo sollicitudin,
+        hendrerit imperdiet tellus. Integer ipsum nisl, ultricies ac lobortis id, finibus at augue.
       </p>
 
-      <span v-if="rule.points !== undefined" class="points-badge"> +{{ rule.points }} pts </span>
+      <div class="rule-tabs">
+        <button
+          type="button"
+          :class="{ active: selectedRuleType === 'scoring' }"
+          @click="selectedRuleType = 'scoring'"
+        >
+          <i class="fa-solid fa-medal"></i>
+          Scoring System
+        </button>
 
-      <span v-if="rule.category" class="category-badge">
-        {{ rule.category }}
-      </span>
+        <button
+          type="button"
+          :class="{ active: selectedRuleType === 'schedule' }"
+          @click="selectedRuleType = 'schedule'"
+        >
+          <i class="fas fa-calendar-days"></i>
+          Category Schedule
+        </button>
+      </div>
+
+      <div v-for="rule in filteredRules" :key="rule.id" class="rule-card">
+        <div class="rule-header">
+          {{ rule.title }}
+        </div>
+
+        <p class="rule-description">
+          {{ rule.description }}
+        </p>
+
+        <span v-if="rule.points !== undefined" class="points-badge"> +{{ rule.points }} pts </span>
+
+        <span v-if="rule.category" class="category-badge">
+          {{ rule.category }}
+        </span>
+      </div>
     </div>
   </section>
 </template>
 
 <style scoped>
 .principal-section {
-  margin-top: 4rem;
+  margin-top: 6rem;
 }
 
 h2 {

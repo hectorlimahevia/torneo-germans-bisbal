@@ -21,9 +21,7 @@ const users = ref([])
 const scheduleResetKey = ref(0)
 const updateResetKey = ref(0)
 const fieldResetKey = ref(0)
-
 const selectedAdminTab = ref('create')
-const error = ref('')
 
 const loading = ref({
   createMatch: false,
@@ -59,10 +57,8 @@ async function loadData() {
     fields.value = fieldsResponse.data
     matches.value = matchesResponse.data
     users.value = usersResponse.data
-  } catch (err) {
-    console.error(err)
-
-    error.value = 'Could not load admin data'
+  } catch {
+    showToast('Could not load admin data', 'error')
   }
 }
 
@@ -74,8 +70,6 @@ async function createMatch(matchData) {
   loading.value.createMatch = true
 
   try {
-    error.value = ''
-
     await api.post('/api/matches', {
       ...matchData,
       localTries: 0,
@@ -84,13 +78,10 @@ async function createMatch(matchData) {
     })
 
     showToast('Match created successfully', 'success')
-
     scheduleResetKey.value++
 
     await loadData()
   } catch (err) {
-    console.error(err)
-
     showToast(getErrorMessage(err, 'Could not create match'), 'error')
   } finally {
     loading.value.createMatch = false
@@ -104,8 +95,6 @@ async function updateMatch(payload) {
   const matchUpdate = payload.matchUpdate
 
   try {
-    error.value = ''
-
     if (!selectedMatchId) {
       showToast('Please select a match', 'error')
       return
@@ -132,13 +121,10 @@ async function updateMatch(payload) {
     })
 
     showToast('Match updated successfully', 'success')
-
     updateResetKey.value++
 
     await loadData()
   } catch (err) {
-    console.error(err)
-
     showToast(getErrorMessage(err, 'Could not update match'), 'error')
   } finally {
     loading.value.updateMatch = false
@@ -163,18 +149,13 @@ async function createField(fieldData) {
   loading.value.createField = true
 
   try {
-    error.value = ''
-
     await api.post('/api/fields', fieldData)
 
     showToast('Field created successfully', 'success')
-
     fieldResetKey.value++
 
     await loadData()
   } catch (err) {
-    console.error(err)
-
     showToast(getErrorMessage(err, 'Could not create field'), 'error')
   } finally {
     loading.value.createField = false
@@ -219,7 +200,6 @@ async function confirmDelete() {
 
     await loadData()
   } catch (err) {
-    console.error(err)
 
     showToast(getErrorMessage(err, 'Could not delete item'), 'error')
   } finally {
@@ -297,7 +277,6 @@ async function confirmRoleAction() {
 
     await loadData()
   } catch (err) {
-    console.error(err)
 
     showToast(getErrorMessage(err, 'Could not update user role'), 'error')
   }
@@ -377,10 +356,6 @@ onMounted(loadData)
         @make-admin="makeAdmin"
         @remove-admin="removeAdmin"
       />
-
-      <p v-if="error" class="error-message">
-        {{ error }}
-      </p>
 
       <ConfirmModal
         v-if="showConfirmModal"

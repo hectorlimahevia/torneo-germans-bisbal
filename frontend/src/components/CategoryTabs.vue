@@ -32,7 +32,7 @@ const emit = defineEmits(['category-selected'])
   display: flex;
   gap: 16px;
   overflow-x: auto;
-  margin-bottom: 8px;
+  margin-bottom: 18px;
   border-bottom: 1px solid var(--border);
 }
 

@@ -2,10 +2,11 @@
 import { ref, onMounted, computed } from 'vue'
 import CategoryTabs from '@/components/CategoryTabs.vue'
 import { CATEGORIES } from '@/constants/categories.js'
+import { useToast } from '@/composables/useToast'
 import api from '@/api/api'
 
 const teams = ref([])
-const error = ref('')
+const { showToast } = useToast()
 const selectedCategory = ref('SUB6')
 const categories = CATEGORIES
 
@@ -17,9 +18,8 @@ async function loadTeams() {
   try {
     const response = await api.get('/api/teams')
     teams.value = response.data
-  } catch (err) {
-    console.error(err)
-    error.value = 'No se pudieron cargar los equipos'
+  } catch {
+    showToast('Could not load teams', 'error')
   }
 }
 
@@ -28,30 +28,25 @@ onMounted(loadTeams)
 
 <template>
   <section class="principal-section">
-    <h2>Teams</h2>
+    <div class="app-container">
+      <h2>Teams</h2>
 
-    <CategoryTabs
-      :categories="categories"
-      :selected-category="selectedCategory"
-      @category-selected="selectedCategory = $event"
-    />
+      <CategoryTabs
+        :categories="categories"
+        :selected-category="selectedCategory"
+        @category-selected="selectedCategory = $event"
+      />
 
-    <p v-if="error">{{ error }}</p>
+      <div class="teams-list">
+        <div v-for="team in filteredTeams" :key="team.id" class="team-card">
+          <img :src="team.club.logoUrl" :alt="team.club.name" />
 
-    <div
-      v-for="team in filteredTeams"
-      :key="team.id"
-      class="team-card"
-    >
-      <img
-        :src="team.club.logoUrl"
-        :alt="team.club.name"
-      >
-
-      <div>
-        <h3>{{ team.name }}</h3>
-        <p>{{ team.category }}</p>
-        <p>{{ team.club.name }} · {{ team.club.city }}</p>
+          <div>
+            <h3>{{ team.name }}</h3>
+            <p>{{ team.category }}</p>
+            <p>{{ team.club.name }} · {{ team.club.city }}</p>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -61,8 +56,9 @@ onMounted(loadTeams)
 .principal-section {
   display: flex;
   flex-direction: column;
-  margin-top: 4rem;
-  gap: 16px;
+  gap: 20px;
+
+  margin-top: 5rem;
 }
 
 h2 {
@@ -70,20 +66,26 @@ h2 {
   margin-bottom: 16px;
 }
 
+.teams-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
 .team-card {
   display: flex;
   align-items: center;
   gap: 16px;
+  padding: 18px;
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
-  padding: 16px;
 }
 
 .team-card img {
-  width: 56px;
-  height: 56px;
+  width: 68px;
+  height: 68px;
   object-fit: contain;
   flex-shrink: 0;
 }
@@ -97,5 +99,22 @@ h2 {
 .team-card p {
   margin: 4px 0;
   color: var(--text-secondary);
+}
+
+@media (min-width: 900px) {
+  .teams-list {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  .team-card {
+    min-height: 125px;
+    padding: 22px;
+  }
+
+  .team-card img {
+    width: 66px;
+    height: 66px;
+  }
 }
 </style>

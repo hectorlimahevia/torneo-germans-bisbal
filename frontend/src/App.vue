@@ -27,44 +27,47 @@ function handleLogout() {
 
 <template>
   <div class="app">
-  <header class="app-header">
-    <button class="menu-button" :class="{ open: isMenuOpen }" type="button" @click="toggleMenu">
-      {{ isMenuOpen ? '✕' : '☰' }}
-    </button>
+    <header class="app-header">
+      <button v-if="!isMenuOpen" class="menu-button" type="button" @click="toggleMenu">☰</button>
 
-    <div v-if="isAuthenticated" class="user-badge">
-      <i :class="isAdmin ? 'fa-solid fa-shield-halved' : 'fa-solid fa-users'"></i>
+      <div v-if="isAuthenticated" class="user-badge">
+        <i :class="isAdmin ? 'fa-solid fa-shield-halved' : 'fa-solid fa-users'"></i>
 
-      <span>{{ currentUser }}</span>
-    </div>
-  </header>
+        <span>{{ currentUser }}</span>
+      </div>
+    </header>
 
-  <nav v-if="isMenuOpen" class="mobile-menu">
-    <RouterLink to="/" @click="closeMenu">Home</RouterLink>
-    <RouterLink to="/standings" @click="closeMenu">Standings</RouterLink>
-    <RouterLink to="/matches" @click="closeMenu">Matches</RouterLink>
-    <RouterLink to="/teams" @click="closeMenu">Teams</RouterLink>
-    <RouterLink to="/rules" @click="closeMenu">Rules</RouterLink>
+    <nav v-if="isMenuOpen" class="mobile-menu">
+      <button class="close-menu" type="button" @click="toggleMenu">✕</button>
+      <RouterLink to="/" @click="closeMenu">Home</RouterLink>
+      <RouterLink to="/standings" @click="closeMenu">Standings</RouterLink>
+      <RouterLink to="/matches" @click="closeMenu">Matches</RouterLink>
+      <RouterLink to="/teams" @click="closeMenu">Teams</RouterLink>
+      <RouterLink to="/rules" @click="closeMenu">Rules</RouterLink>
 
-    <RouterLink v-if="isAdmin" to="/admin" @click="closeMenu"> Admin </RouterLink>
+      <RouterLink v-if="isAdmin" to="/admin" @click="closeMenu"> Admin </RouterLink>
 
-    <RouterLink v-if="!isAuthenticated" to="/login" @click="closeMenu"> Login </RouterLink>
+      <RouterLink v-if="!isAuthenticated" to="/login" @click="closeMenu"> Login </RouterLink>
 
-    <button v-if="isAuthenticated" type="button" class="logout-link" @click="handleLogout">
-      Logout
-    </button>
-  </nav>
+      <button v-if="isAuthenticated" type="button" class="logout-link" @click="handleLogout">
+        Logout
+      </button>
+      <div class="menu-footer">
+        <span>Torneo Germans Bisbal</span>
+        <small>v1.0</small>
+      </div>
+    </nav>
 
-  <main class="app-main">
-    <RouterView v-slot="{ Component, route }">
-      <component :is="Component" :class="{ 'page-container': route.name !== 'login' }" />
-    </RouterView>
-  </main>
+    <main class="app-main">
+      <RouterView v-slot="{ Component, route }">
+        <component :is="Component" :class="{ 'page-container': route.name !== 'login' }" />
+      </RouterView>
+    </main>
 
-  <AiChatWidget v-if="isAuthenticated" />
+    <AiChatWidget v-if="isAuthenticated" />
 
-  <AppFooter  />
-  <ToastContainer />
+    <AppFooter />
+    <ToastContainer />
   </div>
 </template>
 
@@ -90,6 +93,20 @@ function handleLogout() {
   left: 18px;
   z-index: 100;
 }
+.close-menu {
+  width: 42px;
+  height: 42px;
+  margin: 22px 0 18px 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  background: transparent;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+}
 
 .menu-button {
   width: 48px;
@@ -107,10 +124,10 @@ function handleLogout() {
   cursor: pointer;
 }
 
-.menu-button:hover{
-    background:var(--primary);
-    color: #fff;
-      width: 49px;
+.menu-button:hover {
+  background: var(--primary);
+  color: #fff;
+  width: 49px;
   height: 49px;
 }
 
@@ -118,6 +135,22 @@ function handleLogout() {
   background: var(--primary);
   color: white;
 }
+
+.menu-footer {
+  margin-top: auto;
+  padding: 22px;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.7);
+  text-align: center;
+  font-size: 0.8rem;
+}
+
+.menu-footer small {
+  display: block;
+  margin-top: 4px;
+  opacity: 0.7;
+}
+
 .mobile-menu {
   position: fixed;
   top: 0;
@@ -130,6 +163,7 @@ function handleLogout() {
   flex-direction: column;
   padding-top: 90px;
   box-shadow: var(--shadow);
+  padding-top: 0;
 }
 
 .mobile-menu a,
@@ -147,10 +181,9 @@ function handleLogout() {
 
 .mobile-menu a:hover,
 .logout-link:hover {
+  color: var(--primary-light);
   background: rgba(255, 255, 255, 0.12);
 }
-
-
 
 .user-badge {
   position: fixed;
@@ -172,5 +205,40 @@ function handleLogout() {
 
 .user-badge i {
   font-size: 0.95rem;
+}
+
+/* ---------- Desktop ---------- */
+
+@media (min-width: 992px) {
+  .mobile-menu {
+    top: 28px;
+    left: 18px;
+    width: 260px;
+    height: auto;
+    max-height: calc(100vh - 120px);
+    padding: 22px 0;
+    border-radius: 22px;
+    overflow-y: auto;
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.28);
+  }
+
+  .close-menu {
+    position: static;
+    align-self: flex-start;
+    margin: 0 0 18px 22px;
+  }
+
+  .mobile-menu nav {
+    margin-top: 8px;
+  }
+
+  .mobile-menu a,
+  .logout-link {
+    padding: 15px 28px;
+  }
+
+  .menu-footer {
+    margin-top: auto;
+  }
 }
 </style>

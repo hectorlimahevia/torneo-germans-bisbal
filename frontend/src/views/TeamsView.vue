@@ -78,16 +78,20 @@ h2 {
   gap: 16px;
   padding: 18px;
   background: var(--card);
-  border: 1px solid var(--border);
+  border: 1px solid #3a9dc4;
+  border-left: 8px solid var(--primary-light);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .team-card img {
-  width: 68px;
-  height: 68px;
+  width: 62px;
+  height: 62px;
+  margin-right: 8px;
   object-fit: contain;
-  flex-shrink: 0;
 }
 
 .team-card h3 {
@@ -115,6 +119,11 @@ h2 {
   .team-card img {
     width: 66px;
     height: 66px;
+  }
+
+  .team-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.12);
   }
 }
 </style>

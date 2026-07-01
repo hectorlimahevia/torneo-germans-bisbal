@@ -129,12 +129,12 @@ h2 {
 
 .rule-card {
   background: var(--card);
-  border: 1px solid var(--border);
+  border: 1px solid #3a9dc4;
   border-radius: var(--radius);
   padding: 16px;
   margin-top: 5%;
   box-shadow: var(--shadow);
-
+  border-left: 8px solid var(--primary-light);
   display: flex;
   flex-direction: column;
   gap: 10px;

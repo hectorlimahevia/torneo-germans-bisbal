@@ -31,6 +31,10 @@ function goToSponsor(index) {
   currentSponsor.value = index
 }
 
+function formatDate(date) {
+  return new Date(date).toLocaleDateString('es-ES')
+}
+
 function getSponsorClass(index) {
   const total = sponsors.length
   const previousIndex = (currentSponsor.value - 1 + total) % total
@@ -100,10 +104,17 @@ onMounted(loadHomeData)
                 {{ match.field.name }}
               </span>
 
-              <span>
-                <i class="fa-regular fa-clock"></i>
-                {{ match.startTime?.slice(0, 5) }}
-              </span>
+              <div class="match-meta-row">
+                <span>
+                  <i class="fa-regular fa-clock"></i>
+                  {{ match.startTime?.slice(0, 5) }}
+                </span>
+
+                <span>
+                  <i class="fa-regular fa-calendar"></i>
+                  {{ formatDate(match.matchDate) }}
+                </span>
+              </div>
             </div>
           </div>
         </div>
@@ -283,6 +294,27 @@ onMounted(loadHomeData)
   color: var(--primary-light);
 }
 
+.match-meta-row {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 26px;
+  margin-top: 4px;
+}
+
+.match-meta-row span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.match-meta-row i {
+  color: var(--primary-light);
+}
+
 .mini-list {
   display: grid;
   grid-template-columns: 1fr;
@@ -298,24 +330,15 @@ onMounted(loadHomeData)
   padding: 20px;
   background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
   border: 1px solid var(--primary-light);
+  border-left: 8px solid var(--primary-light);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   overflow: hidden;
 }
 
-.mini-card::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 10px;
-  height: 100%;
-  background: var(--primary-light);
-}
-
 .mini-card strong {
   color: var(--primary);
-  font-size: 1rem;
+  font-size: 1.3rem;
   line-height: 1.35;
 }
 
@@ -571,6 +594,11 @@ onMounted(loadHomeData)
   .mini-card {
     min-height: 145px;
     padding: 20px;
+  }
+
+  .mini-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.12);
   }
 }
 </style>

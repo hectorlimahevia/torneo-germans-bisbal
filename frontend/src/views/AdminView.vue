@@ -401,6 +401,7 @@ onMounted(loadData)
 }
 
 .admin-header {
+margin-top: 4rem;
   margin-bottom: 8px;
 }
 

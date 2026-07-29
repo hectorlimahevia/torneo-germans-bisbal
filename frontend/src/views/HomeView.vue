@@ -62,8 +62,8 @@ onMounted(loadHomeData)
 
 <template>
   <section class="home">
-    <div class="app-container">
-      <section class="home-hero">
+    <section class="home-hero">
+      <div class="app-container hero-inner">
         <img src="@/assets/logo_ues.png" alt="Torneo Germans Bisbal" class="hero-logo" />
 
         <div class="hero-title">
@@ -76,17 +76,20 @@ onMounted(loadHomeData)
 
           <p class="hero-slogan">PASSIÓ PEL RUGBY</p>
         </div>
-      </section>
 
-      <div class="quick-nav">
-        <RouterLink to="/standings"> Standings </RouterLink>
+        <div class="quick-nav">
+          <RouterLink to="/standings"><i class="fa-solid fa-ranking-star"></i> Standings</RouterLink>
 
-        <RouterLink to="/matches"> Matches </RouterLink>
+          <RouterLink to="/matches"><i class="fa-solid fa-calendar-days"></i> Matches</RouterLink>
 
-        <RouterLink to="/teams"> Teams </RouterLink>
+          <RouterLink to="/teams"><i class="fa-solid fa-people-group"></i> Teams</RouterLink>
 
-        <RouterLink to="/rules"> Rules </RouterLink>
+          <RouterLink to="/rules"><i class="fa-solid fa-book"></i> Rules</RouterLink>
+        </div>
       </div>
+    </section>
+
+    <div class="app-container">
 
       <section class="home-section">
         <div class="section-header">
@@ -189,58 +192,84 @@ onMounted(loadHomeData)
 
 .home-hero {
   text-align: center;
-  padding-top: 20px;
-  padding-bottom: 20px;
+  padding-top: 44px;
+  padding-bottom: 36px;
+  background: var(--gradient-primary);
+  color: white;
+}
+
+.hero-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .hero-logo {
-  width: 90px;
-  height: 90px;
+  width: 84px;
+  height: 84px;
   object-fit: contain;
   margin-bottom: 12px;
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.25));
 }
 
 .hero-kicker {
   display: block;
-  color: var(--primary);
+  color: var(--accent);
   font-size: 13px;
-  font-weight: 800;
+  font-weight: 700;
+  font-family: var(--font-heading);
   letter-spacing: 8px;
   margin-bottom: 6px;
 }
 
 .hero-title h1 {
   margin: 0;
-  color: var(--primary);
+  color: white;
   font-size: 46px;
   line-height: 0.95;
-  font-weight: 900;
+  font-weight: 700;
+  font-family: var(--font-heading);
 }
 
 .hero-slogan {
   margin-top: 12px;
-  color: #7d6a52;
+  color: rgba(255, 255, 255, 0.8);
   font-size: 14px;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: 2px;
 }
 
-.quick-actions {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
+.quick-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 28px;
+  border-bottom: none;
+  padding-bottom: 0;
+  overflow-x: visible;
 }
 
-.quick-actions a {
-  background: var(--card);
-  color: var(--primary);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 16px;
-  text-align: center;
+.quick-nav a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 999px;
+  color: white;
   text-decoration: none;
-  font-weight: 800;
-  box-shadow: var(--shadow);
+  font-family: var(--font-heading);
+  font-weight: 500;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.quick-nav a:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--primary-dark);
 }
 
 .home-section {
@@ -345,21 +374,6 @@ onMounted(loadHomeData)
 .mini-card span {
   color: var(--text-secondary);
   font-size: 0.9rem;
-}
-
-.quick-nav {
-  display: flex;
-  gap: 20px;
-  overflow-x: auto;
-  padding-bottom: 8px;
-  border-bottom: 1px solid var(--border);
-}
-
-.quick-nav a {
-  text-decoration: none;
-  color: var(--text-secondary);
-  font-weight: 800;
-  white-space: nowrap;
 }
 
 /* poster-section */

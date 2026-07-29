@@ -85,7 +85,7 @@ onMounted(loadRules)
 
 <style scoped>
 .principal-section {
-  margin-top: 6rem;
+  margin-top: 1.75rem;
 }
 
 h2 {
@@ -122,14 +122,14 @@ h2 {
   left: 0;
   right: 0;
   bottom: -9px;
-  height: 4px;
-  background: var(--primary);
+  height: 3px;
+  background: var(--accent);
   border-radius: 999px;
 }
 
 .rule-card {
   background: var(--card);
-  border: 1px solid #3a9dc4;
+  border: 1px solid var(--primary-light);
   border-radius: var(--radius);
   padding: 16px;
   margin-top: 5%;
@@ -151,7 +151,16 @@ h2 {
   color: var(--text-secondary);
 }
 
-.points-badge,
+.points-badge {
+  width: fit-content;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--gradient-accent);
+  color: var(--primary-dark);
+  font-size: 12px;
+  font-weight: 700;
+}
+
 .category-badge {
   width: fit-content;
   padding: 6px 12px;

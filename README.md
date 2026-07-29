@@ -313,7 +313,22 @@ git clone https://github.com/hectorlimahevia/torneo-germans-bisbal.git
 
 ---
 
-## Backend
+## Quickstart with Docker
+
+The fastest way to run the whole stack (MySQL + backend + frontend) locally:
+
+```bash
+cp .env.example .env
+docker compose up --build
+```
+
+Frontend: `http://localhost:8081` · Backend: `http://localhost:8080`.
+
+---
+
+## Manual setup (without Docker)
+
+### Backend
 
 ```bash
 cd backend
@@ -321,9 +336,7 @@ cd backend
 ./mvnw spring-boot:run
 ```
 
----
-
-## Frontend
+### Frontend
 
 ```bash
 cd frontend
@@ -332,6 +345,8 @@ npm install
 
 npm run dev
 ```
+
+See [SETUP.md](./SETUP.md) for full local setup details, and [DEPLOY.md](./DEPLOY.md) for deploying to production (Railway, a VPS, or split hosting).
 
 ---
 

@@ -38,7 +38,7 @@ const chartData = computed(() => {
         data: counts,
         borderRadius: 999,
         barThickness: 22,
-        backgroundColor: 'rgba(58, 157, 196, 0.4)',
+        backgroundColor: 'rgba(217, 154, 43, 0.75)',
       },
     ],
   }
@@ -80,7 +80,7 @@ const chartOptions = {
   datalabels: {
     anchor: 'end',
     align: 'right',
-    color: '#0f2742',
+    color: '#081b30',
     font: {
       weight: 'bold',
       size: 14,

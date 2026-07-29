@@ -1,32 +1,69 @@
-@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Ubuntu:wght@300;400;500;700&display=swap');
 @import './styles/layout.css';
 @import './styles/admin-form.css';
+
 :root {
-  --primary: #123c69;
- --primary-light: #3a9dc4;
-  --background: #fff;
+  /* Brand */
+  --primary: #0f2f52;
+  --primary-dark: #081b30;
+  --primary-light: #2f83ab;
+  --accent: #d99a2b;
+  --accent-dark: #b87d1a;
+  --pitch: #1b6b45;
+
+  /* Surfaces */
+  --background: #f6f7f6;
   --card: #ffffff;
 
-  --text-primary: #1a1a1a;
-  --text-secondary: #666666;
+  /* Text */
+  --text-primary: #16212b;
+  --text-secondary: #5c6b74;
+  --text-on-primary: #ffffff;
 
-  --border: #e0e0e0;
-  --radius: 14px;
-  --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --border: #e2e6e5;
+
+  /* Radii */
+  --radius-sm: 8px;
+  --radius: 16px;
+  --radius-lg: 24px;
+
+  /* Shadows */
+  --shadow-sm: 0 2px 8px rgba(8, 27, 48, 0.07);
+  --shadow: 0 8px 24px rgba(8, 27, 48, 0.1);
+  --shadow-lg: 0 20px 45px rgba(8, 27, 48, 0.18);
+
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 55%, var(--primary-light) 100%);
+  --gradient-accent: linear-gradient(120deg, var(--accent) 0%, var(--accent-dark) 100%);
+
+  --nav-height: 72px;
+
+  --font-heading: 'Oswald', 'Ubuntu', sans-serif;
+  --font-body: 'Ubuntu', sans-serif;
 }
 
 * {
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   margin: 0;
   background: var(--background);
   color: var(--text-primary);
-  font-family:'Ubuntu', sans-serif;
+  font-family: var(--font-body);
 }
 
-
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-heading);
+  letter-spacing: 0.01em;
+}
 
 /* ---------- Global form controls ---------- */
 
@@ -46,7 +83,7 @@ textarea:focus,
 select:focus {
   outline: none;
   border-color: var(--primary);
-  box-shadow: 0 0 0 2px rgba(18, 60, 105, 0.15);
+  box-shadow: 0 0 0 2px rgba(15, 47, 82, 0.15);
 }
 
 button,
@@ -61,8 +98,76 @@ a {
 
 button:focus-visible,
 a:focus-visible {
-  outline: 1px solid rgba(18, 60, 105, 0.65);
+  outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
 
+/* ---------- Shared utilities ---------- */
 
+.eyebrow {
+  display: inline-block;
+  color: var(--accent-dark);
+  font-family: var(--font-heading);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.section-title {
+  margin: 0 0 6px;
+  color: var(--primary);
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: none;
+  border-radius: 999px;
+  padding: 12px 22px;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn-primary {
+  background: var(--gradient-primary);
+  color: var(--text-on-primary);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+.btn-accent {
+  background: var(--gradient-accent);
+  color: var(--primary-dark);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-accent:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.card-surface {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+}

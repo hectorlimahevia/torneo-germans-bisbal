@@ -6,7 +6,7 @@
   display: flex;
   flex-direction: column;
   gap: 18px;
-  background: #f5f7f8;;
+  background: var(--background);
   border: 1px solid var(--border);
   border-radius: 18px;
   box-shadow: var(--shadow);
@@ -63,7 +63,9 @@
 
 .create-button,
 .update-button {
-  background: var(--primary);
+  background: var(--gradient-primary);
+  font-family: var(--font-heading);
+  box-shadow: var(--shadow-sm);
 }
 
 .delete-button {
@@ -72,7 +74,6 @@
 
 .create-button:hover,
 .update-button:hover {
-  background: var(--primary-light);
   transform: translateY(-2px);
   box-shadow: var(--shadow);
 }

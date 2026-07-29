@@ -1,6 +1,7 @@
 <template>
   <footer class="app-footer">
-    <p>© 2026 Torneo Germans Bisbal UES</p>
+    <p class="footer-brand">Torneo Germans Bisbal <span>UES</span></p>
+    <p>© 2026 · Passió pel rugby</p>
 
     <div class="social-links">
       <a href="#" aria-label="Instagram">
@@ -25,7 +26,19 @@
   text-align: center;
   border-top: 1px solid var(--border);
   color: #e2e5e7;
-   background: var(--primary);
+   background: var(--gradient-primary);
+}
+
+.footer-brand {
+  margin: 0 0 4px;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 1.05rem;
+  letter-spacing: 0.03em;
+}
+
+.footer-brand span {
+  color: var(--accent);
 }
 
 .social-links {
@@ -47,9 +60,9 @@
 }
 
 .social-links a:hover {
-  color: #aaccee;
+  color: var(--accent);
   transform: translateY(-4px) scale(1.2);
-  text-shadow: 0 0 12px rgba(30, 64, 175, 0.35);
+  text-shadow: 0 0 12px rgba(217, 154, 43, 0.45);
 }
 
 .footer-tech {

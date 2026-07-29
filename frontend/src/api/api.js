@@ -3,8 +3,11 @@ import router from '@/router'
 
 import { logout } from '@/auth/auth'
 
+// In production the frontend is served behind a reverse proxy that forwards
+// /api requests to the backend on the same origin, so no base URL is needed.
+// Locally, Vite's dev server talks directly to the Spring Boot app.
 const api = axios.create({
-  baseURL: 'http://localhost:8080',
+  baseURL: import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8080',
 })
 
 api.interceptors.request.use((config) => {

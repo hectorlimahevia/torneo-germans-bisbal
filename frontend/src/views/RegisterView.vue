@@ -201,18 +201,21 @@ function isValidPassword(password) {
   padding: 12px 18px;
   border: none;
   border-radius: 999px;
-  background: var(--primary);
+  background: var(--gradient-primary);
   color: white;
-  font-weight: 800;
+  font-family: var(--font-heading);
+  font-weight: 600;
   cursor: pointer;
+  box-shadow: var(--shadow-sm);
   transition:
     background 0.2s ease,
-    transform 0.2s ease;
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .register-button:hover {
-  background: var(--primary-light);
   transform: translateY(-2px);
+  box-shadow: var(--shadow);
 }
 
 .register-button:disabled {

@@ -116,9 +116,9 @@ const emit = defineEmits(['tab-selected'])
   right: 0;
   bottom: -9px;
 
-  height: 4px;
+  height: 3px;
 
-  background: var(--primary);
+  background: var(--accent);
   border-radius: 999px;
 }
 
@@ -153,8 +153,8 @@ const emit = defineEmits(['tab-selected'])
   }
 
   .admin-tabs button.active {
-    border-color: var(--primary);
-    background: rgba(58, 157, 196, 0.08);
+    border-color: var(--primary-light);
+    background: rgba(15, 47, 82, 0.06);
   }
 
   .admin-tabs button.active::after {

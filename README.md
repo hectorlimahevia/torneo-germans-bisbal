@@ -98,7 +98,7 @@ The assistant generates contextual answers based on tournament information.
 <p> Screenshot of the AI assistant answering a real tournament question.</p>
 
 <p align="center">
-    <img src="docs/images/ai_assistant" width="550">
+    <img src="docs/images/ai_assistant.png" width="550">
 </p>
 
 ---
@@ -182,19 +182,23 @@ frontend
 
 # 📸 Application Screenshots
 
-## Imagen 3
+<h2>Login</h2>
 
-**Login**
+<p>Desktop login page with custom design.</p>
 
-Desktop login page with custom design.
+<p align="center">
+    <img src="docs/images/login.png" width="550">
+</p>
 
 ---
 
-## Imagen 4
+<h2>Register</h2>
 
-**Register**
+<p>User registration page.</p>
 
-User registration page.
+<p align="center">
+    <img src="docs/images/register.png" width="550">
+</p>
 
 ---
 

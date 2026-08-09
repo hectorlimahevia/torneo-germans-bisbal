@@ -46,22 +46,20 @@ const props = defineProps({
 }
 
 .stat-card {
-  background: var(--primary-light);
+  background: var(--gradient-primary);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 18px 12px;
   text-align: center;
-  box-shadow: var(--shadow);
+  box-shadow: var(--shadow-sm);
   transition:
     transform 0.2s ease,
-    box-shadow 0.2s ease,
-    background 0.2s ease;
+    box-shadow 0.2s ease;
 }
 
 .stat-card:hover {
   transform: translateY(-3px);
-  background: var(--primary);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--shadow);
 }
 
 .stat-card span {
@@ -80,7 +78,7 @@ const props = defineProps({
 .fa-clipboard-check,
 .fa-location-dot,
 .fa-people-group {
-  color: #fff;
+  color: var(--accent);
   font-size: 1.7rem;
   margin-bottom: 6px;
 }

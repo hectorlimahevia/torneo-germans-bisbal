@@ -58,7 +58,7 @@ onMounted(loadTeams)
   flex-direction: column;
   gap: 20px;
 
-  margin-top: 5rem;
+  margin-top: 1.75rem;
 }
 
 h2 {
@@ -78,7 +78,7 @@ h2 {
   gap: 16px;
   padding: 18px;
   background: var(--card);
-  border: 1px solid #3a9dc4;
+  border: 1px solid var(--primary-light);
   border-left: 8px solid var(--primary-light);
   border-radius: var(--radius);
   box-shadow: var(--shadow);

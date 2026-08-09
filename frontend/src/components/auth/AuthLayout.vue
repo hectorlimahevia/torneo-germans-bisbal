@@ -46,7 +46,8 @@ const props = defineProps({
   justify-content: center;
 
   padding: 24px 22px;
-  background-image: url('@/assets/fondo_login.png');
+  background-image: linear-gradient(180deg, rgba(8, 27, 48, 0.55) 0%, rgba(8, 27, 48, 0.75) 100%),
+    url('@/assets/fondo_login.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -65,14 +66,15 @@ const props = defineProps({
 
 .auth-brand h1 {
   margin: 0;
-  color: var(--primary);
+  color: white;
+  font-family: var(--font-heading);
   font-size: 2rem;
-  font-weight: 900;
+  font-weight: 700;
 }
 
 .auth-brand p {
   margin: 8px 0 0;
-  color: var(--text-secondary);
+  color: var(--accent);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -82,9 +84,11 @@ const props = defineProps({
 .auth-card {
   position: relative;
   z-index: 1;
-  background: transparent;
-  padding: 20px;
-
+  background: var(--card);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  margin-top: 20px;
+  padding: 24px 20px;
 }
 
 @media (min-width: 992px) {
@@ -106,7 +110,7 @@ const props = defineProps({
 
 @media (max-width: 991px) {
   .auth-card {
-    padding: 20px 0;
+    padding: 22px 18px;
   }
 }
 

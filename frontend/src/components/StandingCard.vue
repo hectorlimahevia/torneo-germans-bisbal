@@ -62,11 +62,19 @@ function formatDifference(value) {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  box-shadow: var(--shadow);
+  box-shadow: var(--shadow-sm);
   padding: 16px;
   display: flex;
   flex-direction: column;
   gap: 14px;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.standing-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
 }
 
 .standing-header {
@@ -84,12 +92,15 @@ function formatDifference(value) {
 
 .rank {
   color: white;
-  background: #264157;
+  background: var(--gradient-primary);
   border-radius: 999px;
-  padding: 6px 10px;
-  border: 2px solid #3f79d1;
+  padding: 6px 12px;
+  min-width: 34px;
+  text-align: center;
+  border: none;
+  font-family: var(--font-heading);
   font-size: 14px;
-  font-weight: 900;
+  font-weight: 700;
 }
 
 .team-info h3 {
@@ -100,7 +111,7 @@ function formatDifference(value) {
 
 .points {
   text-align: center;
-  color: var(--primary);
+  color: var(--accent-dark);
 }
 
 .points strong {
@@ -125,7 +136,7 @@ function formatDifference(value) {
   flex: 1;
   text-align: center;
   padding: 8px;
-  background: #f5f7fa;
+  background: var(--background);
   border-radius: 8px;
   font-size: 13px;
   font-weight: 700;

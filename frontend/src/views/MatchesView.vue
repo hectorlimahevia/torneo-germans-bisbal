@@ -52,7 +52,7 @@ onMounted(loadMatches)
 
 <style scoped>
 .principal-section {
-  margin-top: 5rem;
+  margin-top: 1.75rem;
   display: flex;
   flex-direction: column;
   gap: 16px;

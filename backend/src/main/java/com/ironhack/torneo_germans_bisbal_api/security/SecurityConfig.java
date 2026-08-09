@@ -3,6 +3,7 @@ package com.ironhack.torneo_germans_bisbal_api.security;
 import com.ironhack.torneo_germans_bisbal_api.security.filters.CustomAuthenticationFilter;
 import com.ironhack.torneo_germans_bisbal_api.security.filters.CustomAuthorizationFilter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -40,6 +41,10 @@ public class SecurityConfig {
 
     // Autowired instance of the AuthenticationManagerBuilder (provided by Spring Security)
     private final AuthenticationManagerBuilder authManagerBuilder;
+
+    // Comma-separated list of origins allowed to call the API, configurable via app.cors.allowed-origins
+    @Value("#{'${app.cors.allowed-origins:http://localhost:5173,http://localhost:4173}'.split(',')}")
+    private List<String> allowedOrigins;
 
 
     /**
@@ -132,11 +137,7 @@ public class SecurityConfig {
 
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOrigins(
-                List.of(
-                        "http://localhost:5173"
-                )
-        );
+        configuration.setAllowedOrigins(allowedOrigins);
 
         configuration.setAllowedMethods(
                 List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")

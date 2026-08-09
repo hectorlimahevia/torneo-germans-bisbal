@@ -60,9 +60,18 @@ function formatTime(time) {
 .match-card {
   background: var(--card);
   border-radius: var(--radius);
-  box-shadow: var(--shadow);
+  box-shadow: var(--shadow-sm);
   padding: 16px;
   border: 1px solid var(--border);
+  border-left: 6px solid var(--primary-light);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.match-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
 }
 
 .match-top,
@@ -107,13 +116,15 @@ function formatTime(time) {
 }
 
 .score {
-  background: var(--primary);
+  background: var(--gradient-primary);
   color: white;
-  padding: 8px 14px;
+  padding: 8px 16px;
   border-radius: 999px;
+  font-family: var(--font-heading);
   font-size: 22px;
-  font-weight: 900;
+  font-weight: 700;
   white-space: nowrap;
+  box-shadow: var(--shadow-sm);
 }
 
 .match-bottom {

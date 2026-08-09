@@ -5,9 +5,18 @@ import { isAuthenticated, currentUser, isAdmin, logout } from '@/auth/auth'
 import AiChatWidget from '@/components/AiChatWidget.vue'
 import AppFooter from '@/components/AppFooter.vue'
 import ToastContainer from '@/components/ToastContainer.vue'
+import ueslogo from '@/assets/logo_ues.png'
 
 const isMenuOpen = ref(false)
 const router = useRouter()
+
+const navLinks = [
+  { to: '/', label: 'Home' },
+  { to: '/standings', label: 'Standings' },
+  { to: '/matches', label: 'Matches' },
+  { to: '/teams', label: 'Teams' },
+  { to: '/rules', label: 'Rules' },
+]
 
 function toggleMenu() {
   isMenuOpen.value = !isMenuOpen.value
@@ -28,30 +37,70 @@ function handleLogout() {
 <template>
   <div class="app">
     <header class="app-header">
-      <button v-if="!isMenuOpen" class="menu-button" type="button" @click="toggleMenu">☰</button>
+      <div class="app-container header-inner">
+        <RouterLink to="/" class="brand" @click="closeMenu">
+          <img :src="ueslogo" alt="Torneo Germans Bisbal" class="brand-logo" />
+          <span class="brand-name">Germans Bisbal</span>
+        </RouterLink>
 
-      <div v-if="isAuthenticated" class="user-badge">
-        <i :class="isAdmin ? 'fa-solid fa-shield-halved' : 'fa-solid fa-users'"></i>
+        <nav class="desktop-nav">
+          <RouterLink v-for="link in navLinks" :key="link.to" :to="link.to">
+            {{ link.label }}
+          </RouterLink>
 
-        <span>{{ currentUser }}</span>
+          <RouterLink v-if="isAdmin" to="/admin">Admin</RouterLink>
+        </nav>
+
+        <div class="header-actions">
+          <RouterLink v-if="!isAuthenticated" to="/login" class="btn btn-accent login-btn">
+            Login
+          </RouterLink>
+
+          <template v-else>
+            <div class="user-badge">
+              <i :class="isAdmin ? 'fa-solid fa-shield-halved' : 'fa-solid fa-users'"></i>
+              <span>{{ currentUser }}</span>
+            </div>
+
+            <button
+              type="button"
+              class="logout-icon"
+              aria-label="Logout"
+              title="Logout"
+              @click="handleLogout"
+            >
+              <i class="fa-solid fa-right-from-bracket"></i>
+            </button>
+          </template>
+
+          <button
+            class="menu-button"
+            type="button"
+            :aria-expanded="isMenuOpen"
+            aria-label="Toggle menu"
+            @click="toggleMenu"
+          >
+            <i :class="isMenuOpen ? 'fa-solid fa-xmark' : 'fa-solid fa-bars'"></i>
+          </button>
+        </div>
       </div>
     </header>
 
-    <nav v-if="isMenuOpen" class="mobile-menu">
-      <button class="close-menu" type="button" @click="toggleMenu">✕</button>
-      <RouterLink to="/" @click="closeMenu">Home</RouterLink>
-      <RouterLink to="/standings" @click="closeMenu">Standings</RouterLink>
-      <RouterLink to="/matches" @click="closeMenu">Matches</RouterLink>
-      <RouterLink to="/teams" @click="closeMenu">Teams</RouterLink>
-      <RouterLink to="/rules" @click="closeMenu">Rules</RouterLink>
+    <div v-if="isMenuOpen" class="menu-backdrop" @click="closeMenu"></div>
 
-      <RouterLink v-if="isAdmin" to="/admin" @click="closeMenu"> Admin </RouterLink>
+    <nav class="mobile-menu" :class="{ open: isMenuOpen }">
+      <RouterLink v-for="link in navLinks" :key="link.to" :to="link.to" @click="closeMenu">
+        {{ link.label }}
+      </RouterLink>
 
-      <RouterLink v-if="!isAuthenticated" to="/login" @click="closeMenu"> Login </RouterLink>
+      <RouterLink v-if="isAdmin" to="/admin" @click="closeMenu">Admin</RouterLink>
+
+      <RouterLink v-if="!isAuthenticated" to="/login" @click="closeMenu">Login</RouterLink>
 
       <button v-if="isAuthenticated" type="button" class="logout-link" @click="handleLogout">
         Logout
       </button>
+
       <div class="menu-footer">
         <span>Torneo Germans Bisbal</span>
         <small>v1.0</small>
@@ -87,60 +136,172 @@ function handleLogout() {
   padding-bottom: 10px;
 }
 
+/* ---------- Top navbar ---------- */
+
 .app-header {
-  position: fixed;
-  top: 18px;
-  left: 18px;
+  position: sticky;
+  top: 0;
   z-index: 100;
+  height: var(--nav-height);
+  background: var(--gradient-primary);
+  box-shadow: var(--shadow);
 }
-.close-menu {
-  width: 42px;
-  height: 42px;
-  margin: 22px 0 18px 22px;
+
+.header-inner {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: white;
+  text-decoration: none;
+}
+
+.brand-logo {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+}
+
+.brand-name {
+  display: none;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 1.05rem;
+  letter-spacing: 0.02em;
+}
+
+.desktop-nav {
+  display: none;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.login-btn {
+  padding: 8px 18px;
+  font-size: 0.85rem;
+}
+
+.user-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 999px;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.logout-icon {
+  width: 38px;
+  height: 38px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.25);
   border-radius: 50%;
   background: transparent;
-  color: white;
-  font-size: 24px;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 15px;
   cursor: pointer;
 }
 
+.logout-icon:hover {
+  background: rgba(255, 255, 255, 0.14);
+  color: white;
+}
+
 .menu-button {
-  width: 48px;
-  height: 48px;
-  background: white;
-  border: 1px solid var(--border);
-  border-radius: 32px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  color: var(--primary);
-  font-size: 30px;
-  font-weight: 800;
+  width: 42px;
+  height: 42px;
   display: flex;
   align-items: center;
   justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  font-size: 18px;
   cursor: pointer;
 }
 
 .menu-button:hover {
-  background: var(--primary);
-  color: #fff;
-  width: 49px;
-  height: 49px;
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--primary-dark);
 }
 
-.menu-button.open {
-  background: var(--primary);
-  color: white;
+.menu-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 95;
+  background: rgba(8, 27, 48, 0.45);
+  backdrop-filter: blur(2px);
+}
+
+.mobile-menu {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 98;
+  width: 280px;
+  max-width: 82vw;
+  height: 100vh;
+  background: var(--gradient-primary);
+  display: flex;
+  flex-direction: column;
+  padding: calc(var(--nav-height) + 12px) 0 0;
+  box-shadow: var(--shadow-lg);
+  transform: translateX(100%);
+  transition: transform 0.28s ease;
+}
+
+.mobile-menu.open {
+  transform: translateX(0);
+}
+
+.mobile-menu a,
+.logout-link {
+  padding: 16px 28px;
+  color: rgba(255, 255, 255, 0.9);
+  background: transparent;
+  text-decoration: none;
+  font-family: var(--font-heading);
+  font-weight: 500;
+  font-size: 16px;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+}
+
+.mobile-menu a.router-link-active {
+  color: var(--accent);
+}
+
+.mobile-menu a:hover,
+.logout-link:hover {
+  color: var(--accent);
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .menu-footer {
   margin-top: auto;
   padding: 22px;
   border-top: 1px solid rgba(255, 255, 255, 0.15);
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(255, 255, 255, 0.65);
   text-align: center;
   font-size: 0.8rem;
 }
@@ -151,94 +312,49 @@ function handleLogout() {
   opacity: 0.7;
 }
 
-.mobile-menu {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 90;
-  width: 270px;
-  height: 100vh;
-  background: var(--primary);
-  display: flex;
-  flex-direction: column;
-  padding-top: 90px;
-  box-shadow: var(--shadow);
-  padding-top: 0;
-}
-
-.mobile-menu a,
-.logout-link {
-  padding: 16px 28px;
-  color: white;
-  background: transparent;
-  text-decoration: none;
-  font-weight: 500;
-  font-size: 16px;
-  border: none;
-  text-align: left;
-  cursor: pointer;
-}
-
-.mobile-menu a:hover,
-.logout-link:hover {
-  color: var(--primary-light);
-  background: rgba(255, 255, 255, 0.12);
-}
-
-.user-badge {
-  position: fixed;
-  top: 18px;
-  right: 18px;
-  z-index: 100;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 12px;
-  background: var(--primary-light);
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  box-shadow: var(--shadow);
-  color: #fff;
-  font-size: 14px;
-  font-weight: 700;
-}
-
-.user-badge i {
-  font-size: 0.95rem;
-}
-
 /* ---------- Desktop ---------- */
 
 @media (min-width: 992px) {
+  .brand-name {
+    display: inline;
+  }
+
+  .desktop-nav {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+  }
+
+  .desktop-nav a {
+    position: relative;
+    color: rgba(255, 255, 255, 0.85);
+    text-decoration: none;
+    font-family: var(--font-heading);
+    font-weight: 500;
+    font-size: 0.92rem;
+    letter-spacing: 0.02em;
+    padding: 6px 0;
+  }
+
+  .desktop-nav a:hover {
+    color: white;
+  }
+
+  .desktop-nav a.router-link-exact-active,
+  .desktop-nav a.router-link-active {
+    color: var(--accent);
+  }
+
+  .menu-button {
+    display: none;
+  }
+
   .mobile-menu {
-    top: 28px;
-    left: 18px;
-    width: 260px;
-    height: auto;
-    max-height: calc(100vh - 120px);
-    padding: 22px 0;
-    border-radius: 22px;
-    overflow-y: auto;
-    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.28);
+    display: none;
   }
 
-  .close-menu {
-    position: static;
-    align-self: flex-start;
-    margin: 0 0 18px 22px;
-  }
-
-  .mobile-menu nav {
-    margin-top: 8px;
-  }
-
-  .mobile-menu a,
-  .logout-link {
-    padding: 15px 28px;
-  }
-
-  .menu-footer {
-    margin-top: auto;
+  .menu-backdrop {
+    display: none;
   }
 }
 </style>

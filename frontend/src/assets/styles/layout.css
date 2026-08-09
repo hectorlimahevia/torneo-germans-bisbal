@@ -5,8 +5,20 @@
   padding-inline: 24px;
 }
 
+.principal-section {
+  margin-top: 28px;
+  padding-bottom: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
 @media (max-width: 768px) {
   .app-container {
     padding-inline: 16px;
+  }
+
+  .principal-section {
+    margin-top: 18px;
   }
 }

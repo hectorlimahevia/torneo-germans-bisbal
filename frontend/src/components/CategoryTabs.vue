@@ -56,8 +56,15 @@ const emit = defineEmits(['category-selected'])
   left: 0;
   right: 0;
   bottom: -1px;
-  height: 4px;
-  background: var(--primary);
+  height: 3px;
+  background: var(--accent);
   border-radius: 999px;
+}
+
+.category-tabs button {
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.03em;
 }
 </style>

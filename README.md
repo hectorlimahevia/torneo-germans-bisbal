@@ -348,5 +348,5 @@ The project ships with a `Dockerfile` for the backend (multi-stage Java 25 build
 
 **Héctor Javier Lima Hevia**
 
-- GitHub: [github.com/hectorlimahevia](https://github.com/hectorlimahevia)
-- LinkedIn: _(add your profile link here)_
+- GitHub: [github.com/hectorlimahevia](https://github.com/hectorlimahevia/torneo-germans-bisbal/tree/main)
+- LinkedIn: [_https://www.linkedin.com/in/hectorjlima/_]

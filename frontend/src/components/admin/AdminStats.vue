@@ -46,7 +46,7 @@ const props = defineProps({
 }
 
 .stat-card {
-  background: var(--gradient-primary);
+  background: var(--primary-dark);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 18px 12px;

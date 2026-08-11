@@ -63,7 +63,7 @@ onMounted(loadHomeData)
 <template>
   <section class="home">
     <section class="home-hero">
-      <div class="app-container hero-inner">
+      <div class="hero-inner">
         <img src="@/assets/logo_ues.png" alt="Torneo Germans Bisbal" class="hero-logo" />
 
         <div class="hero-title">
@@ -191,17 +191,36 @@ onMounted(loadHomeData)
 }
 
 .home-hero {
+  position: relative;
+  overflow: hidden;
   text-align: center;
   padding-top: 44px;
   padding-bottom: 36px;
-  background: var(--gradient-primary);
+  background: var(--primary);
   color: white;
 }
 
+.home-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: .35;
+  background-image:
+    repeating-linear-gradient(90deg, rgba(255,255,255,.06) 0 1px, transparent 1px 64px),
+    repeating-linear-gradient(0deg, rgba(255,255,255,.06) 0 1px, transparent 1px 64px);
+  mask-image: radial-gradient(circle at 50% 0%, black, transparent 75%);
+  pointer-events: none;
+}
+
 .hero-inner {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
+  max-width: 720px;
+  margin: 0 auto;
+  padding-inline: 24px;
 }
 
 .hero-logo {
@@ -218,7 +237,7 @@ onMounted(loadHomeData)
   font-size: 13px;
   font-weight: 700;
   font-family: var(--font-heading);
-  letter-spacing: 8px;
+  letter-spacing: 3px;
   margin-bottom: 6px;
 }
 
@@ -357,9 +376,8 @@ onMounted(loadHomeData)
   justify-content: space-between;
   gap: 5px;
   padding: 20px;
-  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
-  border: 1px solid var(--primary-light);
-  border-left: 8px solid var(--primary-light);
+  background: var(--card);
+  border: 1px solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   overflow: hidden;

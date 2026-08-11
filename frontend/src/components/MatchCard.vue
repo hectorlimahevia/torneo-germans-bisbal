@@ -63,7 +63,6 @@ function formatTime(time) {
   box-shadow: var(--shadow-sm);
   padding: 16px;
   border: 1px solid var(--border);
-  border-left: 6px solid var(--primary-light);
   transition:
     transform 0.2s ease,
     box-shadow 0.2s ease;
@@ -116,7 +115,7 @@ function formatTime(time) {
 }
 
 .score {
-  background: var(--gradient-primary);
+  background: var(--primary-dark);
   color: white;
   padding: 8px 16px;
   border-radius: 999px;

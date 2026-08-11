@@ -143,7 +143,7 @@ function handleLogout() {
   top: 0;
   z-index: 100;
   height: var(--nav-height);
-  background: var(--gradient-primary);
+  background: var(--primary-dark);
   box-shadow: var(--shadow);
 }
 
@@ -260,7 +260,7 @@ function handleLogout() {
   width: 280px;
   max-width: 82vw;
   height: 100vh;
-  background: var(--gradient-primary);
+  background: var(--primary-dark);
   display: flex;
   flex-direction: column;
   padding: calc(var(--nav-height) + 12px) 0 0;

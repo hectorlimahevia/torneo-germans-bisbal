@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Ubuntu:wght@300;400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
 @import './styles/layout.css';
 @import './styles/admin-form.css';
 
@@ -13,6 +13,7 @@
 
   /* Surfaces */
   --background: #f6f7f6;
+  --page-bg: #fbfcfd;
   --card: #ffffff;
 
   /* Text */
@@ -32,14 +33,10 @@
   --shadow: 0 8px 24px rgba(8, 27, 48, 0.1);
   --shadow-lg: 0 20px 45px rgba(8, 27, 48, 0.18);
 
-  /* Gradients */
-  --gradient-primary: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 55%, var(--primary-light) 100%);
-  --gradient-accent: linear-gradient(120deg, var(--accent) 0%, var(--accent-dark) 100%);
-
   --nav-height: 72px;
 
-  --font-heading: 'Oswald', 'Ubuntu', sans-serif;
-  --font-body: 'Ubuntu', sans-serif;
+  --font-heading: 'Sora', sans-serif;
+  --font-body: 'Inter', sans-serif;
 }
 
 * {
@@ -52,7 +49,7 @@ html {
 
 body {
   margin: 0;
-  background: var(--background);
+  background: var(--page-bg);
   color: var(--text-primary);
   font-family: var(--font-body);
 }
@@ -127,7 +124,7 @@ a:focus-visible {
   justify-content: center;
   gap: 8px;
   border: none;
-  border-radius: 999px;
+  border-radius: var(--radius-sm);
   padding: 12px 22px;
   font-family: var(--font-heading);
   font-weight: 600;
@@ -137,7 +134,7 @@ a:focus-visible {
 }
 
 .btn-primary {
-  background: var(--gradient-primary);
+  background: var(--primary-dark);
   color: var(--text-on-primary);
   box-shadow: var(--shadow-sm);
 }
@@ -148,7 +145,7 @@ a:focus-visible {
 }
 
 .btn-accent {
-  background: var(--gradient-accent);
+  background: var(--accent);
   color: var(--primary-dark);
   box-shadow: var(--shadow-sm);
 }

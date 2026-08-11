@@ -92,7 +92,7 @@ function formatDifference(value) {
 
 .rank {
   color: white;
-  background: var(--gradient-primary);
+  background: var(--primary-dark);
   border-radius: 999px;
   padding: 6px 12px;
   min-width: 34px;

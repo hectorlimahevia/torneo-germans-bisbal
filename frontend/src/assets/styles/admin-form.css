@@ -55,7 +55,7 @@
   margin-top: 8px;
   padding: 12px 18px;
   border: none;
-  border-radius: 999px;
+  border-radius: var(--radius-sm);
   color: white;
   font-weight: 800;
   cursor: pointer;
@@ -63,7 +63,7 @@
 
 .create-button,
 .update-button {
-  background: var(--gradient-primary);
+  background: var(--primary-dark);
   font-family: var(--font-heading);
   box-shadow: var(--shadow-sm);
 }

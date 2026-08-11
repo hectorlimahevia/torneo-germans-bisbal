@@ -26,7 +26,7 @@
   text-align: center;
   border-top: 1px solid var(--border);
   color: #e2e5e7;
-   background: var(--gradient-primary);
+   background: var(--primary-dark);
 }
 
 .footer-brand {

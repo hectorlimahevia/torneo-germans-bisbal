@@ -155,7 +155,7 @@ h2 {
   width: fit-content;
   padding: 6px 12px;
   border-radius: 999px;
-  background: var(--gradient-accent);
+  background: var(--accent);
   color: var(--primary-dark);
   font-size: 12px;
   font-weight: 700;

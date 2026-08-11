@@ -109,8 +109,8 @@ async function login() {
   max-width: 260px;
   padding: 12px 18px;
   border: none;
-  border-radius: 999px;
-  background: var(--gradient-primary);
+  border-radius: var(--radius-sm);
+  background: var(--primary-dark);
   color: white;
   font-family: var(--font-heading);
   font-weight: 600;

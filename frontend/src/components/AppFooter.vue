@@ -1,7 +1,9 @@
 <template>
   <footer class="app-footer">
-    <p class="footer-brand">Torneo Germans Bisbal <span>UES</span></p>
-    <p>© 2026 · Passió pel rugby</p>
+    <div class="footer-text">
+      <p class="footer-brand">Torneo Germans Bisbal <span>UES</span></p>
+      <p class="footer-copy">© 2026 · Passió pel rugby</p>
+    </div>
 
     <div class="social-links">
       <a href="#" aria-label="Instagram">
@@ -21,12 +23,21 @@
 
 <style scoped>
 .app-footer {
-  padding:  16px;
-  margin-top: 6%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 24px 16px;
   text-align: center;
   border-top: 1px solid var(--border);
   color: #e2e5e7;
-   background: var(--primary-dark);
+  background: var(--primary-dark);
+}
+
+.footer-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .footer-brand {
@@ -37,6 +48,10 @@
   letter-spacing: 0.03em;
 }
 
+.footer-copy {
+  margin: 0;
+}
+
 .footer-brand span {
   color: var(--accent);
 }
@@ -45,8 +60,26 @@
   display: flex;
   justify-content: center;
   gap: 24px;
+}
 
-  margin: 16px 0;
+@media (min-width: 768px) {
+  .app-footer {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    text-align: left;
+    padding-inline: 32px;
+  }
+
+  .footer-text {
+    flex-direction: row;
+    align-items: baseline;
+    gap: 10px;
+  }
+
+  .footer-brand {
+    margin: 0;
+  }
 }
 
 .social-links a {

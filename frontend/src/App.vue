@@ -109,7 +109,10 @@ function handleLogout() {
 
     <main class="app-main">
       <RouterView v-slot="{ Component, route }">
-        <component :is="Component" :class="{ 'page-container': route.name !== 'login' }" />
+        <component
+          :is="Component"
+          :class="{ 'page-container': !['login', 'register'].includes(route.name) }"
+        />
       </RouterView>
     </main>
 
@@ -129,6 +132,8 @@ function handleLogout() {
 
 .app-main {
   flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .page-container {
@@ -164,8 +169,8 @@ function handleLogout() {
 }
 
 .brand-logo {
-  width: 36px;
-  height: 36px;
+  width: 46px;
+  height: 46px;
   object-fit: contain;
 }
 

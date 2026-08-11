@@ -1,6 +1,7 @@
 <script setup>
 import uesLogo from '@/assets/logo_ues.png'
 
+
 const props = defineProps({
   title: {
     type: String,
@@ -40,17 +41,13 @@ const props = defineProps({
 <style scoped>
 .auth-layout {
   position: relative;
-  min-height: calc(100vh - 6rem);
+  flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
 
   padding: 24px 22px;
-  background-image: linear-gradient(180deg, rgba(8, 27, 48, 0.55) 0%, rgba(8, 27, 48, 0.75) 100%),
-    url('@/assets/fondo_login.png');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+  background: var(--background);
 }
 
 .auth-brand {
@@ -66,7 +63,7 @@ const props = defineProps({
 
 .auth-brand h1 {
   margin: 0;
-  color: white;
+  color: var(--primary-dark);
   font-family: var(--font-heading);
   font-size: 2rem;
   font-weight: 700;
@@ -74,7 +71,7 @@ const props = defineProps({
 
 .auth-brand p {
   margin: 8px 0 0;
-  color: var(--accent);
+  color: var(--accent-dark);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;

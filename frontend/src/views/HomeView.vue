@@ -193,6 +193,9 @@ onMounted(loadHomeData)
 .home-hero {
   position: relative;
   overflow: hidden;
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
   text-align: center;
   padding-top: 44px;
   padding-bottom: 36px;

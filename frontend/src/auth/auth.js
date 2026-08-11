@@ -10,7 +10,16 @@ export function login(token) {
   isAuthenticated.value = true
 }
 
-export function logout() {
+export async function logout() {
+  try {
+    await fetch((import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8080') + '/api/logout', {
+      method: 'POST',
+      credentials: 'include',
+    })
+  } catch {
+    // if it fails (no connection, etc.) we still clear the local session
+  }
+
   localStorage.removeItem('access_token')
   storedToken.value = null
   isAuthenticated.value = false

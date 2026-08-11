@@ -1,7 +1,9 @@
 package com.ironhack.torneo_germans_bisbal_api.security;
 
+import com.ironhack.torneo_germans_bisbal_api.repository.UserRepository;
 import com.ironhack.torneo_germans_bisbal_api.security.filters.CustomAuthenticationFilter;
 import com.ironhack.torneo_germans_bisbal_api.security.filters.CustomAuthorizationFilter;
+import com.ironhack.torneo_germans_bisbal_api.service.RefreshTokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -46,6 +48,18 @@ public class SecurityConfig {
     @Value("#{'${app.cors.allowed-origins:http://localhost:5173,http://localhost:4173}'.split(',')}")
     private List<String> allowedOrigins;
 
+    @Value("${app.jwt.secret}")
+    private String jwtSecret;
+
+    private final JwtService jwtService;
+
+    private final RefreshTokenService refreshTokenService;
+
+    private final UserRepository userRepository;
+
+    @Value("${app.cookie.secure:true}")
+    private boolean cookieSecure;
+
 
     /**
      * Bean definition for AuthenticationManager
@@ -69,7 +83,7 @@ public class SecurityConfig {
     @Bean
     protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         // CustomAuthenticationFilter instance created
-        CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(authManagerBuilder.getOrBuild());
+        CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(authManagerBuilder.getOrBuild(), jwtService, refreshTokenService, userRepository, cookieSecure);
 
         // set the URL that the filter should process
         customAuthenticationFilter.setFilterProcessesUrl("/api/login");
@@ -83,6 +97,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers("/api/login/**").permitAll()// public endpoint, we could add more if we wanted to
                         .requestMatchers(POST, "/api/register").permitAll()
+                        .requestMatchers(POST, "/api/refresh").permitAll()
+                        .requestMatchers(POST, "/api/logout").permitAll()
                         .requestMatchers("/api/greet").permitAll()
                         .requestMatchers("/api/greet/personal").hasAnyAuthority("ROLE_USER")
 
@@ -126,7 +142,7 @@ public class SecurityConfig {
         http.addFilter(customAuthenticationFilter);
 
         // Add the custom authorization filter before the standard authentication filter.
-        http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new CustomAuthorizationFilter(jwtSecret), UsernamePasswordAuthenticationFilter.class);
 
         // Build the security filter chain to be returned.
         return http.build();

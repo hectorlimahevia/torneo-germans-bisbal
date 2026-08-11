@@ -34,6 +34,12 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 @Slf4j // (Simple Logging Facade for Java) offers logging API which is more professional that simply sout
 public class CustomAuthorizationFilter extends OncePerRequestFilter {
 
+    private final String jwtSecret;
+
+    public CustomAuthorizationFilter(String jwtSecret) {
+        this.jwtSecret = jwtSecret;
+    }
+
     /**
      * The method doFilterInternal will handle the authorization of a user to access the API endpoints.
      *
@@ -49,7 +55,9 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
 
         log.info("Authorization filter called for path: {}", request.getServletPath());
 
-        if (request.getServletPath().equals("/api/login")) {
+        if (request.getServletPath().equals("/api/login")
+                || request.getServletPath().equals("/api/refresh")
+                || request.getServletPath().equals("/api/logout")) {
             filterChain.doFilter(request, response);
         } else {
             // If the request is not for the API Login endpoint, check if the request has the authorization header
@@ -58,7 +66,7 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
                 try {
                     // If the authorization header is present, get the token
                     String token = authorizationHeader.substring("Bearer ".length());
-                    Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
+                    Algorithm algorithm = Algorithm.HMAC256(jwtSecret.getBytes());
                     JWTVerifier verifier = JWT.require(algorithm).build();
 
                     // Verify the token using HMAC256

@@ -1,10 +1,12 @@
 package com.ironhack.torneo_germans_bisbal_api.security.filters;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
 import com.ironhack.torneo_germans_bisbal_api.dto.LoginRequest;
+import com.ironhack.torneo_germans_bisbal_api.repository.UserRepository;
+import com.ironhack.torneo_germans_bisbal_api.security.JwtService;
+import com.ironhack.torneo_germans_bisbal_api.service.RefreshTokenService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +21,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -29,14 +30,27 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @Slf4j // (Simple Logging Facade for Java) offers logging API which is more professional that simply sout
 public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
+    private final RefreshTokenService refreshTokenService;
+    private final UserRepository userRepository;
+    private final boolean cookieSecure;
 
     /**
      * Constructor for CustomAuthenticationFilter
      *
      * @param authenticationManager
+     * @param jwtService
+     * @param refreshTokenService
+     * @param userRepository
+     * @param cookieSecure
      */
-    public CustomAuthenticationFilter(AuthenticationManager authenticationManager) {
+    public CustomAuthenticationFilter(AuthenticationManager authenticationManager, JwtService jwtService,
+                                       RefreshTokenService refreshTokenService, UserRepository userRepository, boolean cookieSecure) {
         this.authenticationManager = authenticationManager;
+        this.jwtService = jwtService;
+        this.refreshTokenService = refreshTokenService;
+        this.userRepository = userRepository;
+        this.cookieSecure = cookieSecure;
     }
 
     /**
@@ -85,17 +99,25 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         // Cast the authentication principal to spring security User object
         User user = (User) authentication.getPrincipal();
 
-        // Creating an HMAC256 (Hash-based Message Authentication Code using SHA-512 algorithm)
-        // encoded JWT with secret key
-        Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
+        // Generating the access token via the shared JwtService (same logic used by /api/refresh)
+        String access_token = jwtService.generateAccessToken(
+                user.getUsername(),
+                user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()),
+                request.getRequestURL().toString());
 
-        // Adding user details and roles to the token
-        String access_token = JWT.create()
-                .withSubject(user.getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis() + 10 * 60 * 1000))
-                .withIssuer(request.getRequestURL().toString())
-                .withClaim("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
-                .sign(algorithm);
+        // Load the application's own User entity (the principal above is Spring Security's User)
+        com.ironhack.torneo_germans_bisbal_api.model.User appUser = userRepository.findByUsername(user.getUsername());
+
+        // Issue a refresh token and hand it to the client as an httpOnly cookie
+        String refreshToken = refreshTokenService.issue(appUser);
+
+        Cookie cookie = new Cookie("refresh_token", refreshToken);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(cookieSecure);
+        cookie.setPath("/api");
+        cookie.setMaxAge(60 * 60 * 24 * 30); // 30 days, in seconds
+        cookie.setAttribute("SameSite", "Lax");
+        response.addCookie(cookie);
 
         // Creating a map with the generated token
         Map<String, String> tokens = new HashMap<>();

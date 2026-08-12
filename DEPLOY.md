@@ -12,6 +12,8 @@ El proyecto ya está dockerizado (`backend/Dockerfile`, `frontend/Dockerfile`, `
    - `SPRING_DATASOURCE_PASSWORD` = `${{MySQL.MYSQLPASSWORD}}`
    - `OPENAI_API_KEY` = (opcional)
    - `APP_CORS_ALLOWED_ORIGINS` = la URL pública que Railway asigne al frontend (la sabrás tras el paso 4; puedes actualizarla después)
+   - `APP_JWT_SECRET` = una clave aleatoria propia de este entorno (genera una con `openssl rand -base64 48`, distinta de la que uses en local) — **obligatoria**, si no se define el backend arranca con un valor de aviso no apto para producción.
+   - `APP_COOKIE_SECURE` = `true` (Railway sirve por HTTPS, así que es el valor correcto; es también el default si no la defines).
    - Railway inyecta `PORT` automáticamente; el backend ya lo respeta (`server.port: ${PORT:8080}`).
 4. **Frontend**: "New Service" → mismo repo → **Root Directory** en `frontend`. Antes de desplegar, cambia en `frontend/docker/nginx.conf` la línea `proxy_pass http://backend:8080/api/;` por la URL pública del servicio backend de Railway (te la da Railway al desplegarlo), o usa una variable de red interna de Railway si prefieres mantenerlas en el mismo proyecto privado.
 5. En cada servicio, pulsa "Generate Domain" para obtener una URL pública tipo `*.up.railway.app`.
@@ -45,4 +47,7 @@ Si prefieres el frontend y el backend en proveedores distintos:
 - [ ] `OPENAI_API_KEY` configurado si quieres el asistente IA activo.
 - [ ] `APP_CORS_ALLOWED_ORIGINS` incluye la URL pública real del frontend.
 - [ ] Contraseña de MySQL cambiada respecto al valor por defecto de `.env.example`.
+- [ ] `APP_JWT_SECRET` generado de nuevo para este entorno (no reutilizar el de desarrollo local).
+- [ ] `APP_COOKIE_SECURE=true` y el sitio se sirve por HTTPS (si no hay HTTPS delante, la cookie de sesión persistente no se enviará nunca).
+- [ ] Si frontend y backend quedan en dominios distintos (opción "hosting separado"), revisar que la cookie de refresh token (`SameSite=Lax`) siga funcionando entre esos dos orígenes.
 - [ ] `docker compose up --build` probado en local antes de desplegar.

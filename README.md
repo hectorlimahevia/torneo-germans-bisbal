@@ -55,10 +55,10 @@ Not deployed to a public URL yet. The project is fully containerised and deploym
 ## 📸 Preview
 
 <p align="center">
-    <img src="docs/images/hero_banner.png" width="950" alt="Torneo Germans Bisbal home page">
+    <img src="docs/images/home.png" width="950" alt="Torneo Germans Bisbal home page">
 </p>
 
-<p align="center"><sub>Screenshot from an earlier visual iteration — see <a href="#-screenshots">Screenshots</a> for the up-to-date gallery.</sub></p>
+<p align="center"><sub>See the <a href="#-screenshots">Screenshots</a> section below for the full gallery.</sub></p>
 
 ---
 
@@ -100,7 +100,7 @@ Example questions it can answer:
 Exposed through two endpoints (`GET /api/ai/chat`, `GET /api/ai/summary/{category}`), with per-user conversation memory and role-gated access (`ROLE_USER` / `ROLE_ADMIN` only).
 
 <p align="center">
-    <img src="docs/images/ai_assistant.png" width="420" alt="AI assistant answering a standings question">
+    <img src="docs/images/ai_assistant.png" width="420" alt="AI assistant chat panel">
 </p>
 
 ---
@@ -208,7 +208,7 @@ All endpoints are prefixed with `/api`. Full request/response details live in th
 
 | Resource       | Endpoints                                                              | Public access                 |
 | -------------- | ----------------------------------------------------------------------- | ------------------------------ |
-| Auth           | `POST /login`, `POST /register`                                       | ✅ public                     |
+| Auth           | `POST /login`, `POST /register`, `POST /refresh`, `POST /logout`      | ✅ public                     |
 | Matches        | `GET /matches`, `GET /matches/{id}`, `POST` / `PUT` / `DELETE`         | reads public, writes admin-only |
 | Standings      | `GET /standings/{category}`                                            | ✅ public                     |
 | Teams          | `GET /teams`, `GET /teams/{id}`, `POST` / `PUT` / `DELETE`             | reads public, writes admin-only |
@@ -229,7 +229,9 @@ Two roles are supported:
 - `ROLE_USER` — registered tournament followers (AI assistant access)
 - `ROLE_ADMIN` — full write access to matches, teams, clubs, fields, rules and user management
 
-Every write endpoint (`POST` / `PUT` / `DELETE`) is restricted to `ROLE_ADMIN`; read endpoints for tournament data are public by design so anyone can follow the competition. CORS origins are externalised via the `APP_CORS_ALLOWED_ORIGINS` environment variable rather than hardcoded, so the same build can move from local dev to production without a code change.
+Every write endpoint (`POST` / `PUT` / `DELETE`) is restricted to `ROLE_ADMIN`; read endpoints for tournament data are public by design so anyone can follow the competition. CORS origins are externalised via the `APP_CORS_ALLOWED_ORIGINS` environment variable rather than hardcoded, so the same build can move from local dev to production without a code change. The JWT signing key is also externalised (`APP_JWT_SECRET`) rather than hardcoded.
+
+**Session persistence.** Short-lived access tokens (15 min) are paired with a rotating refresh token: on login, the API also sets an `httpOnly` cookie holding a 30-day refresh token, stored **hashed** (SHA-256) in the database — the raw token only ever exists in that cookie, never at rest. Each use rotates it (the old one is revoked, a new one issued), and `POST /api/logout` revokes it server-side, not just client-side. The frontend transparently calls `POST /api/refresh` when an access token expires, so the user stays logged in without re-entering credentials.
 
 ---
 
@@ -251,20 +253,45 @@ MySQL 8 with Spring Data JPA / Hibernate (`ddl-auto: update`). Notable design de
 
 ## 📸 Screenshots
 
-The screenshots below reflect the app **before** the latest visual redesign (new navbar, colour system and layout). They'll be swapped for up-to-date captures — if you're picking this repo back up, running the app locally (see [Installation](#-installation)) and dropping new PNGs at the paths below is all that's needed for this gallery to update itself:
+<p align="center">
+    <img src="docs/images/home.png" width="800" alt="Home page"><br><sub>Home</sub>
+</p>
 
-| Page                  | File                                  | Status              |
-| --------------------- | -------------------------------------- | -------------------- |
-| Home                  | `docs/images/home.png`                | ⏳ pending capture    |
-| Login                 | `docs/images/login.png`               | ⏳ pending capture    |
-| Register              | `docs/images/register.png`            | ⏳ pending capture    |
-| Teams                 | `docs/images/teams.png`               | ⏳ pending capture    |
-| Matches               | `docs/images/matches.png`             | ⏳ pending capture    |
-| Standings             | `docs/images/standings.png`           | ⏳ pending capture    |
-| Rules                 | `docs/images/rules.png`               | ⏳ pending capture    |
-| Admin dashboard       | `docs/images/admin-dashboard.png`     | ⏳ pending capture    |
-| User management       | `docs/images/admin-users.png`         | ⏳ pending capture    |
-| AI Assistant          | `docs/images/ai_assistant.png`        | ✅ available (pre-redesign) |
+<p align="center">
+    <img src="docs/images/matches.png" width="800" alt="Matches"><br><sub>Matches</sub>
+</p>
+
+<p align="center">
+    <img src="docs/images/standings.png" width="800" alt="Standings"><br><sub>Standings</sub>
+</p>
+
+<p align="center">
+    <img src="docs/images/teams.png" width="800" alt="Teams"><br><sub>Teams</sub>
+</p>
+
+<p align="center">
+    <img src="docs/images/rules.png" width="800" alt="Rules"><br><sub>Rules</sub>
+</p>
+
+<p align="center">
+    <img src="docs/images/login.png" width="800" alt="Login"><br><sub>Login</sub>
+</p>
+
+<p align="center">
+    <img src="docs/images/register.png" width="800" alt="Register"><br><sub>Register</sub>
+</p>
+
+<p align="center">
+    <img src="docs/images/admin-dashboard.png" width="800" alt="Admin dashboard"><br><sub>Admin dashboard</sub>
+</p>
+
+<p align="center">
+    <img src="docs/images/admin-users.png" width="800" alt="User management"><br><sub>User management</sub>
+</p>
+
+<p align="center">
+    <img src="docs/images/ai_assistant.png" width="800" alt="AI Assistant"><br><sub>AI Assistant — empty state shown; the live chat needs <code>OPENAI_API_KEY</code> set to answer questions.</sub>
+</p>
 
 ---
 
@@ -320,6 +347,10 @@ Configuration is externalised via environment variables (see [`.env.example`](./
 | `SPRING_DATASOURCE_PASSWORD` | MySQL password                                   | *(empty)*                                |
 | `OPENAI_API_KEY`             | Enables the AI Assistant                         | *(empty — feature disabled if unset)*    |
 | `APP_CORS_ALLOWED_ORIGINS`   | Comma-separated origins allowed to call the API  | `http://localhost:5173,http://localhost:4173` |
+| `APP_JWT_SECRET`             | Key used to sign access tokens. **Required** — generate with `openssl rand -base64 48` | *(placeholder — override before deploying)* |
+| `APP_JWT_ACCESS_EXP_MIN`     | Access token lifetime, in minutes                | `15`                                     |
+| `APP_REFRESH_EXP_DAYS`       | Refresh token lifetime, in days                  | `30`                                     |
+| `APP_COOKIE_SECURE`          | `Secure` flag on the refresh token cookie — keep `true` behind HTTPS, only disable for local HTTP dev | `true`                                   |
 | `VITE_API_BASE_URL`          | Frontend → backend base URL (build-time)         | `http://localhost:8080` in dev, empty (relative, proxied) in production |
 
 ---
@@ -348,5 +379,5 @@ The project ships with a `Dockerfile` for the backend (multi-stage Java 25 build
 
 **Héctor Javier Lima Hevia**
 
-- GitHub: [github.com/hectorlimahevia](https://github.com/hectorlimahevia/torneo-germans-bisbal/tree/main)
-- LinkedIn: [_https://www.linkedin.com/in/hectorjlima/_]
+- GitHub: [github.com/hectorlimahevia](https://github.com/hectorlimahevia)
+- LinkedIn: [linkedin.com/in/hectorjlima](https://www.linkedin.com/in/hectorjlima/)

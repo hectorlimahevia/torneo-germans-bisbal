@@ -5,8 +5,8 @@ import AuthLayout from '@/components/auth/AuthLayout.vue'
 import { ref } from 'vue'
 import api from '@/api/api'
 
-const username = ref('james')
-const password = ref('1234')
+const username = ref('')
+const password = ref('')
 const message = ref('')
 const router = useRouter()
 const showPassword = ref(false)

@@ -240,13 +240,13 @@ Every write endpoint (`POST` / `PUT` / `DELETE`) is restricted to `ROLE_ADMIN`; 
 MySQL 8 with Spring Data JPA / Hibernate (`ddl-auto: update`). Notable design decision: **rules use single-table JPA inheritance** (`Rule` → `ScheduleRule`, `ScoringRule`), which lets scoring rules and schedule rules share a table and a repository while keeping their own fields and validation.
 
 <p align="center">
-    <img src="backend/docs/images/torneo_germans_bisbal_db.png" width="900" alt="Entity relationship diagram">
+    <img src="docs/diagrams/torneo_germans_bisbal_db.png" width="900" alt="Entity relationship diagram">
 </p>
 
 <p align="center"><sub>Entities: <code>tournament</code>, <code>club</code>, <code>team</code>, <code>field</code>, <code>matches</code>, <code>rules</code>, <code>user</code>, <code>role</code>, <code>user_roles</code>.</sub></p>
 
 <p align="center">
-    <img src="backend/docs/images/diagrama_de_clases.png" width="600" alt="Rule inheritance class diagram">
+    <img src="docs/diagrams/diagrama_de_clases.png" width="600" alt="Rule inheritance class diagram">
 </p>
 
 ---
@@ -290,7 +290,7 @@ MySQL 8 with Spring Data JPA / Hibernate (`ddl-auto: update`). Notable design de
 </p>
 
 <p align="center">
-    <img src="docs/images/ai_assistant.png" width="800" alt="AI Assistant"><br><sub>AI Assistant — empty state shown; the live chat needs <code>OPENAI_API_KEY</code> set to answer questions.</sub>
+    <img src="docs/images/ai_assistant.png" width="800" alt="AI Assistant"><br><sub>AI Assistant — sample conversation mockup styled after the live widget; the real assistant needs <code>OPENAI_API_KEY</code> set to answer questions.</sub>
 </p>
 
 ---

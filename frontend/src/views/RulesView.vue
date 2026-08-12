@@ -37,11 +37,10 @@ onMounted(loadRules)
       <h2>Rules</h2>
 
       <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam interdum massa vitae metus
-        feugiat consectetur. Nam hendrerit cursus quam sed lacinia. Curabitur diam ex, condimentum
-        eleifend magna eget, scelerisque imperdiet dui. Phasellus egestas arcu id aliquam ornare.
-        Nunc a erat et purus tristique euismod. Aenean magna dui, faucibus vitae justo sollicitudin,
-        hendrerit imperdiet tellus. Integer ipsum nisl, ultricies ac lobortis id, finibus at augue.
+        Here you'll find the tournament's official rules, organized by category. Use the tabs below
+        to switch between the <strong>scoring system</strong> — how points are awarded for wins,
+        draws and tries — and the <strong>match schedule</strong> rules for each age category, including
+        match duration and format.
       </p>
 
       <div class="rule-tabs">

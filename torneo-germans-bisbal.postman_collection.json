@@ -1,0 +1,1023 @@
+{
+  "info": {
+    "name": "Torneo Germans Bisbal API",
+    "description": "REST API for the Torneo Germans Bisbal tournament management platform.\n\nAuth: most write endpoints require a Bearer access_token (ROLE_ADMIN for tournament-data writes). Run **Auth > Login** first \u2014 set `{{access_token}}` at the collection level from the response, or add a small post-response script to Login that does it for you:\n\n```js\npm.collectionVariables.set('access_token', pm.response.json().access_token);\n```\n\nEndpoints marked with \u26a0\ufe0f have request bodies inferred from the frontend and naming conventions (the DTO source files weren't available when this collection was generated) \u2014 double check field names against `backend/src/main/java/.../dto/` before relying on them.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{access_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "access_token",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "login"
+              ]
+            },
+            "description": "Public. Returns { access_token } and sets the refresh_token httpOnly cookie.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"james\",\n  \"password\": \"1234\"\n}"
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "register"
+              ]
+            },
+            "description": "Public.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"New Player\",\n  \"username\": \"newplayer\",\n  \"password\": \"Password1\"\n}"
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "Refresh access token",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/refresh",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "refresh"
+              ]
+            },
+            "description": "Public \u2014 relies on the refresh_token cookie set at login (enable 'Send cookies' in Postman). Returns a new { access_token } and rotates the cookie.",
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/logout",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "logout"
+              ]
+            },
+            "description": "Public \u2014 revokes the refresh token tied to the refresh_token cookie.",
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        }
+      ],
+      "description": "Login/registration are public. Refresh and logout rely on the httpOnly refresh_token cookie set by Login \u2014 make sure Postman is configured to store and send cookies for {{baseUrl}}."
+    },
+    {
+      "name": "Matches",
+      "item": [
+        {
+          "name": "List matches",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/matches",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "matches"
+              ]
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "Get match by id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/matches/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "matches",
+                "1"
+              ]
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "Create match",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/matches",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "matches"
+              ]
+            },
+            "description": "Admin only. \u26a0\ufe0f Body shape inferred from the frontend/DTO naming conventions, not read directly from the DTO source \u2014 verify field names against backend/.../dto/ before relying on this for real testing.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"matchDate\": \"2026-09-12\",\n  \"startTime\": \"10:30:00\",\n  \"endTime\": \"11:00:00\",\n  \"fieldId\": 1,\n  \"localTeamId\": 1,\n  \"visitorTeamId\": 2,\n  \"roundNumber\": 1\n}"
+            }
+          }
+        },
+        {
+          "name": "Update match",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/matches/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "matches",
+                "1"
+              ]
+            },
+            "description": "Admin only. \u26a0\ufe0f Body shape inferred from the frontend/DTO naming conventions, not read directly from the DTO source \u2014 verify field names against backend/.../dto/ before relying on this for real testing.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"localTries\": 3,\n  \"visitorTries\": 1,\n  \"status\": \"FINISHED\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete match",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/matches/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "matches",
+                "1"
+              ]
+            },
+            "description": "Admin only."
+          }
+        }
+      ],
+      "description": "Reads are public; writes require ROLE_ADMIN."
+    },
+    {
+      "name": "Standings",
+      "item": [
+        {
+          "name": "Standings by category",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/standings/SUB10",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "standings",
+                "SUB10"
+              ]
+            },
+            "description": "Public. Categories in this project: SUB6, SUB8, SUB10, SUB12.",
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Teams",
+      "item": [
+        {
+          "name": "List teams",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/teams",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "teams"
+              ]
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "Get team by id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/teams/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "teams",
+                "1"
+              ]
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "Create team",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/teams",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "teams"
+              ]
+            },
+            "description": "Admin only. \u26a0\ufe0f Body shape inferred from the frontend/DTO naming conventions, not read directly from the DTO source \u2014 verify field names against backend/.../dto/ before relying on this for real testing.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"UE Santboiana A\",\n  \"category\": \"SUB10\",\n  \"clubId\": 1\n}"
+            }
+          }
+        },
+        {
+          "name": "Update team",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/teams/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "teams",
+                "1"
+              ]
+            },
+            "description": "Admin only. \u26a0\ufe0f Body shape inferred from the frontend/DTO naming conventions, not read directly from the DTO source \u2014 verify field names against backend/.../dto/ before relying on this for real testing.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"UE Santboiana A\",\n  \"category\": \"SUB10\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete team",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/teams/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "teams",
+                "1"
+              ]
+            },
+            "description": "Admin only."
+          }
+        }
+      ],
+      "description": "Reads are public; writes require ROLE_ADMIN."
+    },
+    {
+      "name": "Clubs",
+      "item": [
+        {
+          "name": "List clubs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/clubs",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "clubs"
+              ]
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "Get club by id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/clubs/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "clubs",
+                "1"
+              ]
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "Create club",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/clubs",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "clubs"
+              ]
+            },
+            "description": "Admin only. \u26a0\ufe0f Body shape inferred from the frontend/DTO naming conventions, not read directly from the DTO source \u2014 verify field names against backend/.../dto/ before relying on this for real testing.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"UE Santboiana\",\n  \"logoUrl\": \"https://example.com/logos/santboiana.png\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Update club",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/clubs/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "clubs",
+                "1"
+              ]
+            },
+            "description": "Admin only. \u26a0\ufe0f Body shape inferred from the frontend/DTO naming conventions, not read directly from the DTO source \u2014 verify field names against backend/.../dto/ before relying on this for real testing.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"UE Santboiana\",\n  \"logoUrl\": \"https://example.com/logos/santboiana.png\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete club",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/clubs/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "clubs",
+                "1"
+              ]
+            },
+            "description": "Admin only."
+          }
+        }
+      ],
+      "description": "Reads are public; writes require ROLE_ADMIN."
+    },
+    {
+      "name": "Fields",
+      "item": [
+        {
+          "name": "List fields",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/fields",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "fields"
+              ]
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "Get field by id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/fields/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "fields",
+                "1"
+              ]
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "Create field",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/fields",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "fields"
+              ]
+            },
+            "description": "Admin only. \u26a0\ufe0f Body shape inferred from the frontend/DTO naming conventions, not read directly from the DTO source \u2014 verify field names against backend/.../dto/ before relying on this for real testing.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Camp Municipal 1\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Update field",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/fields/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "fields",
+                "1"
+              ]
+            },
+            "description": "Admin only. \u26a0\ufe0f Body shape inferred from the frontend/DTO naming conventions, not read directly from the DTO source \u2014 verify field names against backend/.../dto/ before relying on this for real testing.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Camp Municipal 1\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete field",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/fields/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "fields",
+                "1"
+              ]
+            },
+            "description": "Admin only."
+          }
+        }
+      ],
+      "description": "Reads are public; writes require ROLE_ADMIN."
+    },
+    {
+      "name": "Rules",
+      "item": [
+        {
+          "name": "List rules",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/rules",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "rules"
+              ]
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "Get rule by id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/rules/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "rules",
+                "1"
+              ]
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "Create scoring rule",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/rules",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "rules"
+              ]
+            },
+            "description": "Admin only. `Rule` uses single-table JPA inheritance (ScheduleRule / ScoringRule) \u2014 the exact discriminator field/value isn't confirmed here. \u26a0\ufe0f Body shape inferred from the frontend/DTO naming conventions, not read directly from the DTO source \u2014 verify field names against backend/.../dto/ before relying on this for real testing.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Win\",\n  \"description\": \"Match won\",\n  \"points\": 4\n}"
+            }
+          }
+        },
+        {
+          "name": "Create schedule rule",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/rules",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "rules"
+              ]
+            },
+            "description": "Admin only. \u26a0\ufe0f Body shape inferred from the frontend/DTO naming conventions, not read directly from the DTO source \u2014 verify field names against backend/.../dto/ before relying on this for real testing.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"SUB10 match length\",\n  \"description\": \"2 x 15 minute halves\",\n  \"category\": \"SUB10\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Update rule",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/rules/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "rules",
+                "1"
+              ]
+            },
+            "description": "Admin only. \u26a0\ufe0f Body shape inferred from the frontend/DTO naming conventions, not read directly from the DTO source \u2014 verify field names against backend/.../dto/ before relying on this for real testing.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Win\",\n  \"description\": \"Match won\",\n  \"points\": 4\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete rule",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/rules/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "rules",
+                "1"
+              ]
+            },
+            "description": "Admin only."
+          }
+        }
+      ],
+      "description": "Reads are public; writes require ROLE_ADMIN. rule.points identifies a scoring rule, rule.category a schedule rule (see RulesView.vue)."
+    },
+    {
+      "name": "Users & Roles",
+      "item": [
+        {
+          "name": "List users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users"
+              ]
+            },
+            "description": "Requires ROLE_USER or ROLE_ADMIN (any authenticated user)."
+          }
+        },
+        {
+          "name": "Create user",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users"
+              ]
+            },
+            "description": "Admin only. \u26a0\ufe0f Body shape inferred from the frontend/DTO naming conventions, not read directly from the DTO source \u2014 verify field names against backend/.../dto/ before relying on this for real testing.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"New Admin\",\n  \"username\": \"newadmin\",\n  \"password\": \"Password1\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Create role",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/roles",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "roles"
+              ]
+            },
+            "description": "Admin only. \u26a0\ufe0f Body shape inferred from the frontend/DTO naming conventions, not read directly from the DTO source \u2014 verify field names against backend/.../dto/ before relying on this for real testing.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"ROLE_USER\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Add role to user",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/roles/add-to-user",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "roles",
+                "add-to-user"
+              ]
+            },
+            "description": "Admin only. \u26a0\ufe0f Body shape inferred from the frontend/DTO naming conventions, not read directly from the DTO source \u2014 verify field names against backend/.../dto/ before relying on this for real testing.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"newplayer\",\n  \"roleName\": \"ROLE_ADMIN\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Remove role from user",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/roles/remove-from-user",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "roles",
+                "remove-from-user"
+              ]
+            },
+            "description": "Admin only. \u26a0\ufe0f Body shape inferred from the frontend/DTO naming conventions, not read directly from the DTO source \u2014 verify field names against backend/.../dto/ before relying on this for real testing.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"newplayer\",\n  \"roleName\": \"ROLE_ADMIN\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "AI Assistant",
+      "item": [
+        {
+          "name": "Chat with assistant",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/ai/chat?message=Who is leading the SUB10 category?",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "ai",
+                "chat"
+              ],
+              "query": [
+                {
+                  "key": "message",
+                  "value": "Who is leading the SUB10 category?"
+                }
+              ]
+            },
+            "description": "Requires ROLE_USER or ROLE_ADMIN. Needs OPENAI_API_KEY set on the backend."
+          }
+        },
+        {
+          "name": "Category summary",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/ai/summary/SUB10",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "ai",
+                "summary",
+                "SUB10"
+              ]
+            },
+            "description": "Requires ROLE_USER or ROLE_ADMIN. Needs OPENAI_API_KEY set on the backend."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Demo",
+      "item": [
+        {
+          "name": "Public greet",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/greet",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "greet"
+              ]
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "Personal greet",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/greet/personal",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "greet",
+                "personal"
+              ]
+            },
+            "description": "Requires ROLE_USER \u2014 leftover demo endpoint from the bootcamp scaffolding."
+          }
+        }
+      ]
+    }
+  ]
+}

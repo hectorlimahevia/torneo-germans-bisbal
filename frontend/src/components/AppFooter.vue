@@ -2,7 +2,7 @@
   <footer class="app-footer">
     <div class="footer-text">
       <p class="footer-brand">Torneo Germans Bisbal <span>UES</span></p>
-      <p class="footer-copy">© 2026 · Passió pel rugby</p>
+      <p class="footer-copy">© 2026 · Passion for rugby</p>
     </div>
 
     <div class="social-links">

@@ -3,6 +3,7 @@ package com.ironhack.torneo_germans_bisbal_api.security.filters;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -84,11 +85,7 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
                     UsernamePasswordAuthenticationToken authenticationToken =
                             new UsernamePasswordAuthenticationToken(username, null, authorities);
                     SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-
-                    // Pass the request to the next filter in the chain
-                    filterChain.doFilter(request, response);
-
-                } catch (Exception exception) {
+                } catch (JWTVerificationException exception) {
                     log.error("Error logging in: {}", exception.getMessage());
 
                     // If an error occurs during the authorization process, set the error message in the response header and return a Forbidden error status
@@ -98,7 +95,13 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
                     error.put("error_message", exception.getMessage());
                     response.setContentType(APPLICATION_JSON_VALUE);
                     new ObjectMapper().writeValue(response.getOutputStream(), error);
+                    return;
                 }
+
+                // Pass the request to the next filter in the chain. Any exception thrown further
+                // down the chain (controllers, services) propagates normally to Spring's exception
+                // handling instead of being caught here as an authentication failure.
+                filterChain.doFilter(request, response);
 
             } else {
                 // If the header does not contain "Bearer" or the header is null, then continue with the filter chain.

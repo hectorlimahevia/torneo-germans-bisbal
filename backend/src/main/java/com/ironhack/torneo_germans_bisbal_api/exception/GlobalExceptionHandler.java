@@ -1,5 +1,7 @@
 package com.ironhack.torneo_germans_bisbal_api.exception;
 
+import com.openai.errors.OpenAIException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -7,6 +9,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.Map;
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -44,6 +47,18 @@ public class GlobalExceptionHandler {
                 .body(Map.of(
                         "message",
                         exception.getMessage()
+                ));
+    }
+
+    @ExceptionHandler(OpenAIException.class)
+    public ResponseEntity<Map<String, String>> handleOpenAIException(OpenAIException exception) {
+        log.error("OpenAI request failed: {}", exception.getMessage());
+
+        return ResponseEntity
+                .status(HttpStatus.SERVICE_UNAVAILABLE)
+                .body(Map.of(
+                        "message",
+                        "The AI assistant is currently unavailable. Please try again later."
                 ));
     }
 }

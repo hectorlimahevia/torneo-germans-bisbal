@@ -43,6 +43,24 @@ const emit = defineEmits(['tab-selected'])
 
       <button
         type="button"
+        :class="{ active: props.selectedTab === 'club' }"
+        @click="emit('tab-selected', 'club')"
+      >
+        <i class="fa-solid fa-shield-halved"></i>
+        Create Club
+      </button>
+
+      <button
+        type="button"
+        :class="{ active: props.selectedTab === 'team' }"
+        @click="emit('tab-selected', 'team')"
+      >
+        <i class="fa-solid fa-people-group"></i>
+        Create Team
+      </button>
+
+      <button
+        type="button"
         :class="{ active: props.selectedTab === 'users' }"
         @click="emit('tab-selected', 'users')"
       >
@@ -70,7 +88,7 @@ const emit = defineEmits(['tab-selected'])
 
 .admin-tabs {
   display: grid;
-  grid-template-columns: repeat(4, auto);
+  grid-template-columns: repeat(6, auto);
   align-items: center;
   gap: 20px;
 

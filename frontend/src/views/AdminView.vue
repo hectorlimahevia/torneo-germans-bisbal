@@ -7,6 +7,8 @@ import AdminTabs from '@/components/admin/AdminTabs.vue'
 import ScheduleMatchForm from '@/components/admin/ScheduleMatchForm.vue'
 import UpdateMatchForm from '@/components/admin/UpdateMatchForm.vue'
 import CreateFieldForm from '@/components/admin/CreateFieldForm.vue'
+import CreateClubForm from '@/components/admin/CreateClubForm.vue'
+import CreateTeamForm from '@/components/admin/CreateTeamForm.vue'
 import ConfirmModal from '@/components/ConfirmModal.vue'
 import AdminChart from '@/components/admin/AdminChart.vue'
 import AdminUsers from '@/components/admin/AdminUsers.vue'
@@ -15,18 +17,23 @@ import { useToast } from '@/composables/useToast'
 
 const teams = ref([])
 const fields = ref([])
+const clubs = ref([])
 const matches = ref([])
 const users = ref([])
 
 const scheduleResetKey = ref(0)
 const updateResetKey = ref(0)
 const fieldResetKey = ref(0)
+const clubResetKey = ref(0)
+const teamResetKey = ref(0)
 const selectedAdminTab = ref('create')
 
 const loading = ref({
   createMatch: false,
   updateMatch: false,
   createField: false,
+  createClub: false,
+  createTeam: false,
   deleteItem: false,
 })
 
@@ -46,15 +53,18 @@ const { showToast } = useToast()
 
 async function loadData() {
   try {
-    const [teamsResponse, fieldsResponse, matchesResponse, usersResponse] = await Promise.all([
-      api.get('/api/teams'),
-      api.get('/api/fields'),
-      api.get('/api/matches'),
-      api.get('/api/users'),
-    ])
+    const [teamsResponse, fieldsResponse, clubsResponse, matchesResponse, usersResponse] =
+      await Promise.all([
+        api.get('/api/teams'),
+        api.get('/api/fields'),
+        api.get('/api/clubs'),
+        api.get('/api/matches'),
+        api.get('/api/users'),
+      ])
 
     teams.value = teamsResponse.data
     fields.value = fieldsResponse.data
+    clubs.value = clubsResponse.data
     matches.value = matchesResponse.data
     users.value = usersResponse.data
   } catch {
@@ -176,6 +186,68 @@ function deleteField(fieldId) {
   showConfirmModal.value = true
 }
 
+async function createClub(clubData) {
+  loading.value.createClub = true
+
+  try {
+    await api.post('/api/clubs', clubData)
+
+    showToast('Club created successfully', 'success')
+    clubResetKey.value++
+
+    await loadData()
+  } catch (err) {
+    showToast(getErrorMessage(err, 'Could not create club'), 'error')
+  } finally {
+    loading.value.createClub = false
+  }
+}
+
+function deleteClub(clubId) {
+  if (!clubId) {
+    showToast('Please select a club', 'error')
+    return
+  }
+
+  confirmConfig.value = {
+    type: 'club',
+    id: clubId,
+  }
+
+  showConfirmModal.value = true
+}
+
+async function createTeam(teamData) {
+  loading.value.createTeam = true
+
+  try {
+    await api.post('/api/teams', teamData)
+
+    showToast('Team created successfully', 'success')
+    teamResetKey.value++
+
+    await loadData()
+  } catch (err) {
+    showToast(getErrorMessage(err, 'Could not create team'), 'error')
+  } finally {
+    loading.value.createTeam = false
+  }
+}
+
+function deleteTeam(teamId) {
+  if (!teamId) {
+    showToast('Please select a team', 'error')
+    return
+  }
+
+  confirmConfig.value = {
+    type: 'team',
+    id: teamId,
+  }
+
+  showConfirmModal.value = true
+}
+
 async function confirmDelete() {
   loading.value.deleteItem = true
 
@@ -194,6 +266,22 @@ async function confirmDelete() {
       showToast('Field deleted successfully', 'success')
 
       fieldResetKey.value++
+    }
+
+    if (confirmConfig.value.type === 'club') {
+      await api.delete(`/api/clubs/${confirmConfig.value.id}`)
+
+      showToast('Club deleted successfully', 'success')
+
+      clubResetKey.value++
+    }
+
+    if (confirmConfig.value.type === 'team') {
+      await api.delete(`/api/teams/${confirmConfig.value.id}`)
+
+      showToast('Team deleted successfully', 'success')
+
+      teamResetKey.value++
     }
 
     closeConfirmModal()
@@ -350,6 +438,27 @@ onMounted(loadData)
         @field-deleted="deleteField"
       />
 
+      <CreateClubForm
+        v-if="selectedAdminTab === 'club'"
+        :key="clubResetKey"
+        :clubs="clubs"
+        :reset-key="clubResetKey"
+        :is-loading="loading.createClub"
+        @club-created="createClub"
+        @club-deleted="deleteClub"
+      />
+
+      <CreateTeamForm
+        v-if="selectedAdminTab === 'team'"
+        :key="teamResetKey"
+        :teams="teams"
+        :clubs="clubs"
+        :reset-key="teamResetKey"
+        :is-loading="loading.createTeam"
+        @team-created="createTeam"
+        @team-deleted="deleteTeam"
+      />
+
       <AdminUsers
         v-if="selectedAdminTab === 'users'"
         :users="users"
@@ -366,7 +475,11 @@ onMounted(loadData)
               : 'Remove Admin'
             : confirmConfig.type === 'field'
               ? 'Delete Field'
-              : 'Delete Match'
+              : confirmConfig.type === 'club'
+                ? 'Delete Club'
+                : confirmConfig.type === 'team'
+                  ? 'Delete Team'
+                  : 'Delete Match'
         "
         :message="
           confirmConfig.type === 'role'
@@ -375,7 +488,11 @@ onMounted(loadData)
               : `Are you sure you want to remove admin permissions from ${roleAction.user?.name}?`
             : confirmConfig.type === 'field'
               ? 'Are you sure you want to delete this field? This action cannot be undone.'
-              : 'Are you sure you want to delete this match? This action cannot be undone.'
+              : confirmConfig.type === 'club'
+                ? 'Are you sure you want to delete this club? This action cannot be undone.'
+                : confirmConfig.type === 'team'
+                  ? 'Are you sure you want to delete this team? This action cannot be undone.'
+                  : 'Are you sure you want to delete this match? This action cannot be undone.'
         "
         :confirm-text="
           confirmConfig.type === 'role'

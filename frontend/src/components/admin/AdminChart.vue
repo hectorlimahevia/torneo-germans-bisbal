@@ -1,18 +1,5 @@
 <script setup>
-import { computed } from 'vue'
-import ChartDataLabels from 'chartjs-plugin-datalabels'
-import { Bar } from 'vue-chartjs'
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-} from 'chart.js'
-
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
+import { computed, ref, onMounted } from 'vue'
 
 const props = defineProps({
   matches: {
@@ -21,72 +8,62 @@ const props = defineProps({
   },
 })
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ChartDataLabels)
-
 const categories = ['SUB6', 'SUB8', 'SUB10', 'SUB12']
 
-const chartData = computed(() => {
-  const counts = categories.map((category) => {
-    return props.matches.filter((match) => match.localTeam?.category === category).length
+const counts = computed(() => {
+  const result = {}
+
+  categories.forEach((category) => {
+    result[category] = props.matches.filter(
+      (match) => match.localTeam?.category === category,
+    ).length
   })
 
-  return {
-    labels: categories,
-    datasets: [
-      {
-        label: 'Matches',
-        data: counts,
-        borderRadius: 999,
-        barThickness: 14,
-        backgroundColor: 'rgba(217, 154, 43, 0.75)',
-      },
-    ],
-  }
+  return result
 })
 
-const chartOptions = {
-  responsive: true,
-  maintainAspectRatio: false,
+const max = computed(() => Math.max(1, ...Object.values(counts.value)))
 
-  indexAxis: 'y',
+const leader = computed(() => {
+  const withMatches = categories.filter((category) => counts.value[category] > 0)
 
-  plugins: {
-    legend: {
-      display: false,
-    },
+  if (withMatches.length === 0) {
+    return null
+  }
 
-    title: {
-      display: false,
-    },
+  return withMatches.reduce((a, b) => (counts.value[b] > counts.value[a] ? b : a))
+})
 
-    tooltip: {
-      callbacks: {
-        label(context) {
-          return `${context.raw} matches`
-        },
-      },
-    },
-  },
+const totalMatches = computed(() => props.matches.length)
 
-  scales: {
-    x: {
-      beginAtZero: true,
-      ticks: {
-        precision: 0,
-      },
-    },
-  },
+const leaderPct = computed(() => {
+  if (!leader.value || totalMatches.value === 0) {
+    return 0
+  }
 
-  datalabels: {
-    anchor: 'end',
-    align: 'right',
-    color: '#081b30',
-    font: {
-      weight: 'bold',
-      size: 14,
-    },
-    formatter: (value) => value,
-  },
+  return Math.round((counts.value[leader.value] / totalMatches.value) * 100)
+})
+
+const R = 34
+const C = 2 * Math.PI * R
+
+const animated = ref(false)
+
+onMounted(() => {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    animated.value = true
+    return
+  }
+
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      animated.value = true
+    })
+  })
+})
+
+function ringOffset(cat) {
+  return animated.value ? C - C * (counts.value[cat] / max.value) : C
 }
 </script>
 
@@ -97,9 +74,52 @@ const chartOptions = {
       <p>Matches distribution by category.</p>
     </div>
 
-    <div class="chart-wrapper">
-      <Bar :data="chartData" :options="chartOptions" />
+    <div class="rings-body">
+      <div
+        v-for="cat in categories"
+        :key="cat"
+        class="ring-item"
+        :class="{ leader: cat === leader }"
+      >
+        <span v-if="cat === leader" class="crown">
+          <i class="fa-solid fa-crown"></i>
+        </span>
+
+        <svg width="86" height="86" viewBox="0 0 86 86">
+          <circle class="ring-track" cx="43" cy="43" :r="R" />
+          <circle
+            class="ring-fill"
+            :class="{ 'is-leader': cat === leader }"
+            cx="43"
+            cy="43"
+            :r="R"
+            :stroke-dasharray="C"
+            :style="{ strokeDashoffset: ringOffset(cat) }"
+          />
+        </svg>
+
+        <div class="ring-center">
+          <div class="n">{{ counts[cat] }}</div>
+        </div>
+
+        <div class="ring-label">{{ cat }}</div>
+      </div>
     </div>
+
+    <p v-if="leader" class="leader-caption">
+      <strong>{{ leader }}</strong> concentra el {{ leaderPct }}% de los partidos programados
+      hasta ahora.
+    </p>
+    <p v-else class="leader-caption empty">Todavía no hay partidos programados.</p>
+
+    <svg width="0" height="0" style="position: absolute">
+      <defs>
+        <linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#d99a2b" />
+          <stop offset="100%" stop-color="#b87d1a" />
+        </linearGradient>
+      </defs>
+    </svg>
   </section>
 </template>
 
@@ -123,8 +143,110 @@ const chartOptions = {
   font-size: 0.9rem;
 }
 
-.chart-wrapper {
-  height: 120px;
-  margin-top: 16px;
+.rings-body {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: flex-end;
+  gap: 12px;
+
+  padding: 26px 22px 28px;
+}
+
+.ring-item {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.ring-item.leader {
+  transform: scale(1.14);
+}
+
+.ring-item svg {
+  transform: rotate(-90deg);
+}
+
+.ring-track {
+  fill: none;
+  stroke: var(--background);
+  stroke-width: 9;
+}
+
+.ring-fill {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 9;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 1s cubic-bezier(0.22, 0.9, 0.3, 1);
+}
+
+.ring-fill.is-leader {
+  stroke: url(#ringGrad);
+}
+
+.ring-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+
+  text-align: center;
+}
+
+.ring-center .n {
+  color: var(--text-primary);
+  font-family: var(--font-heading);
+  font-size: 1.3rem;
+  font-weight: 800;
+}
+
+.ring-label {
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.crown {
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  translate: -50% 0;
+
+  width: 22px;
+  height: 22px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: var(--shadow-sm);
+
+  color: var(--accent-dark);
+  font-size: 0.85rem;
+}
+
+.leader-caption {
+  margin: 0;
+  padding: 0 22px 20px;
+
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+.leader-caption strong {
+  color: var(--accent-dark);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ring-fill {
+    transition: none;
+  }
 }
 </style>

@@ -1,5 +1,5 @@
 <script setup>
-const props = defineProps({
+defineProps({
   matchesCount: {
     type: Number,
     required: true,
@@ -12,94 +12,108 @@ const props = defineProps({
     type: Number,
     required: true,
   },
+  clubsCount: {
+    type: Number,
+    required: true,
+  },
 })
 </script>
 
 <template>
-  <div class="admin-stats">
-    <div class="stat-card">
-      <i class="fas fa-clipboard-check"></i>
-      <span>{{ props.matchesCount }}</span>
-      <p>Matches</p>
+  <div class="stat-strip">
+    <div class="strip-item" style="--kpi-color: var(--accent)">
+      <i class="fa-solid fa-clipboard-check"></i>
+      <div>
+        <div class="num">{{ matchesCount }}</div>
+        <div class="label">Matches</div>
+      </div>
     </div>
 
-    <div class="stat-card">
-      <i class="fas fa-people-group"></i>
-      <span>{{ props.teamsCount }}</span>
-      <p>Teams</p>
+    <div class="strip-item" style="--kpi-color: var(--pitch)">
+      <i class="fa-solid fa-people-group"></i>
+      <div>
+        <div class="num">{{ teamsCount }}</div>
+        <div class="label">Teams</div>
+      </div>
     </div>
 
-    <div class="stat-card">
-      <i class="fas fa-location-dot"></i>
-      <span>{{ props.fieldsCount }}</span>
-      <p>Fields</p>
+    <div class="strip-item" style="--kpi-color: var(--primary-light)">
+      <i class="fa-solid fa-location-dot"></i>
+      <div>
+        <div class="num">{{ fieldsCount }}</div>
+        <div class="label">Fields</div>
+      </div>
+    </div>
+
+    <div class="strip-item" style="--kpi-color: var(--primary)">
+      <i class="fa-solid fa-shield-halved"></i>
+      <div>
+        <div class="num">{{ clubsCount }}</div>
+        <div class="label">Clubs</div>
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-.admin-stats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-  margin-bottom: 2rem;
-}
+.stat-strip {
+  display: flex;
+  flex-wrap: wrap;
 
-.stat-card {
-  background: var(--primary-dark);
+  background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 18px 12px;
-  text-align: center;
   box-shadow: var(--shadow-sm);
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
+
+  margin-bottom: 2rem;
+  overflow: hidden;
 }
 
-.stat-card:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow);
-}
+.strip-item {
+  flex: 1;
+  min-width: 140px;
 
-.stat-card span {
-  display: block;
-  font-size: 2rem;
-  font-weight: 800;
-  color: #fff;
-}
-
-.stat-card p {
-  margin: 6px 0 0;
-  color: #e7e3e3;
-  font-size: 0.9rem;
-}
-
-.fa-clipboard-check,
-.fa-location-dot,
-.fa-people-group {
-  color: var(--accent);
-  font-size: 1.7rem;
-  margin-bottom: 6px;
-}
-
-.admin-stats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
+  align-items: center;
   gap: 12px;
+
+  padding: 16px 20px;
+
+  border-right: 1px solid var(--border);
 }
 
-@media (min-width: 768px) {
-  .admin-stats {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
-  }
+.strip-item:last-child {
+  border-right: none;
 }
 
-@media (min-width: 1200px) {
-  .admin-stats {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-  }
+.strip-item i {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: color-mix(in srgb, var(--kpi-color, var(--accent)) 16%, white);
+  color: var(--kpi-color, var(--accent));
+
+  font-size: 1.1rem;
+}
+
+.num {
+  color: var(--text-primary);
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.label {
+  margin-top: 4px;
+  color: var(--text-secondary);
+  font-size: 0.78rem;
 }
 </style>

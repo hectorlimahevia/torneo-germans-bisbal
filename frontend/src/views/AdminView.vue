@@ -403,6 +403,7 @@ onMounted(loadData)
         :matches-count="matches.length"
         :teams-count="teams.length"
         :fields-count="fields.length"
+        :clubs-count="clubs.length"
       />
 
       <AdminChart :matches="matches" />

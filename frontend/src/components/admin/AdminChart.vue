@@ -37,7 +37,7 @@ const chartData = computed(() => {
         label: 'Matches',
         data: counts,
         borderRadius: 999,
-        barThickness: 22,
+        barThickness: 14,
         backgroundColor: 'rgba(217, 154, 43, 0.75)',
       },
     ],
@@ -124,7 +124,7 @@ const chartOptions = {
 }
 
 .chart-wrapper {
-  height: 220px;
+  height: 120px;
   margin-top: 16px;
 }
 </style>

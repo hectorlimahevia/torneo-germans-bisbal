@@ -42,6 +42,7 @@ public class ClubServiceImpl implements ClubService {
         existingClub.setCity(club.getCity());
         existingClub.setCountry(club.getCountry());
         existingClub.setLogoUrl(club.getLogoUrl());
+        existingClub.setColor(club.getColor());
 
         return clubRepository.save(existingClub);
     }

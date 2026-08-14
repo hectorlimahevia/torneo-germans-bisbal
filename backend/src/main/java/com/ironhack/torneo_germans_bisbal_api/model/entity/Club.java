@@ -26,4 +26,6 @@ public class Club {
     private String country;
 
     private String logoUrl;
+
+    private String color;
 }

@@ -204,6 +204,22 @@ async function createClub(clubData) {
   }
 }
 
+async function updateClubColor({ clubId, color }) {
+  const club = clubs.value.find((item) => item.id === clubId)
+
+  if (!club) {
+    return
+  }
+
+  try {
+    await api.put(`/api/clubs/${clubId}`, { ...club, color })
+
+    await loadData()
+  } catch (err) {
+    showToast(getErrorMessage(err, 'Could not update club color'), 'error')
+  }
+}
+
 function deleteClub(clubId) {
   if (!clubId) {
     showToast('Please select a club', 'error')
@@ -408,7 +424,7 @@ onMounted(loadData)
 
       <AdminChart :matches="matches" />
 
-      <AdminOverview :clubs="clubs" :teams="teams" />
+      <AdminOverview :clubs="clubs" :teams="teams" @club-color-changed="updateClubColor" />
 
       <AdminTabs :selected-tab="selectedAdminTab" @tab-selected="selectedAdminTab = $event" />
 

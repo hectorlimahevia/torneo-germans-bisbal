@@ -12,8 +12,58 @@ const props = defineProps({
   },
 })
 
+const emit = defineEmits(['color-changed'])
+
 const isOpen = ref(false)
 const logoFailed = ref(false)
+const colorInput = ref(null)
+
+// Hex twins of the brand tokens (--primary-light, --accent-dark, --pitch,
+// --primary): used as a fallback palette for clubs without a saved color,
+// and kept as plain hex so <input type="color"> can also use them as a value.
+const CLUB_COLORS = ['#2f83ab', '#b87d1a', '#1b6b45', '#0f2f52']
+
+function hashString(value) {
+  let hash = 0
+
+  for (let i = 0; i < value.length; i++) {
+    hash = (hash << 5) - hash + value.charCodeAt(i)
+    hash |= 0
+  }
+
+  return Math.abs(hash)
+}
+
+const autoColor = computed(() => {
+  const key = String(props.club.id ?? props.club.name ?? '')
+  return CLUB_COLORS[hashString(key) % CLUB_COLORS.length]
+})
+
+const crestColor = computed(() => props.club.color || autoColor.value)
+
+const headerTint = computed(() => `color-mix(in srgb, ${crestColor.value} 8%, white)`)
+
+function openColorPicker() {
+  colorInput.value?.click()
+}
+
+function onColorChange(event) {
+  emit('color-changed', { clubId: props.club.id, color: event.target.value })
+}
+
+const initials = computed(() => {
+  const words = (props.club.name ?? '').trim().split(/\s+/).filter(Boolean)
+
+  if (words.length === 0) {
+    return '?'
+  }
+
+  if (words.length === 1) {
+    return words[0].slice(0, 2).toUpperCase()
+  }
+
+  return (words[0][0] + words[1][0]).toUpperCase()
+})
 
 const categoriesCount = computed(() => new Set(props.teams.map((team) => team.category)).size)
 
@@ -24,19 +74,39 @@ function toggle() {
 
 <template>
   <div class="club-card">
-    <div class="club-card-head">
-      <div class="club-card-crest">
-        <img
-          v-if="club.logoUrl && !logoFailed"
-          :src="club.logoUrl"
-          :alt="club.name"
-          @error="logoFailed = true"
+    <div class="club-card-head" :style="{ background: headerTint }">
+      <div class="club-card-crest-wrap">
+        <div class="club-card-crest" :style="{ background: crestColor }">{{ initials }}</div>
+
+        <button
+          type="button"
+          class="crest-edit"
+          title="Change club color"
+          @click="openColorPicker"
+        >
+          <i class="fa-solid fa-pen"></i>
+        </button>
+
+        <input
+          ref="colorInput"
+          type="color"
+          class="color-input-hidden"
+          :value="crestColor"
+          @change="onColorChange"
         />
-        <i v-else class="fa-solid fa-shield-halved"></i>
       </div>
 
       <div>
-        <h4>{{ club.name }}</h4>
+        <h4>
+          <img
+            v-if="club.logoUrl && !logoFailed"
+            :src="club.logoUrl"
+            :alt="club.name"
+            class="mini-logo"
+            @error="logoFailed = true"
+          />
+          {{ club.name }}
+        </h4>
         <p class="city">{{ club.city }}</p>
       </div>
     </div>
@@ -91,39 +161,83 @@ function toggle() {
   padding: 20px;
 }
 
+.club-card-crest-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
 .club-card-crest {
   width: 56px;
   height: 56px;
-  flex-shrink: 0;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  background: var(--background);
+  border-radius: 50%;
+  box-shadow: var(--shadow-sm);
+
+  color: #fff;
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.crest-edit {
+  position: absolute;
+  right: -2px;
+  bottom: -2px;
+
+  width: 22px;
+  height: 22px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: var(--card);
   border: 1px solid var(--border);
   border-radius: 50%;
   box-shadow: var(--shadow-sm);
 
-  overflow: hidden;
+  color: var(--text-secondary);
+  font-size: 0.65rem;
+
+  cursor: pointer;
 }
 
-.club-card-crest img {
-  width: 100%;
-  height: 100%;
-  padding: 8px;
-  object-fit: contain;
-}
-
-.club-card-crest i {
+.crest-edit:hover {
   color: var(--primary);
-  font-size: 1.4rem;
+}
+
+.color-input-hidden {
+  position: absolute;
+  width: 0;
+  height: 0;
+  padding: 0;
+  border: none;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .club-card-head h4 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
   margin: 0;
+
   color: var(--text-primary);
   font-size: 1.05rem;
+}
+
+.mini-logo {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+
+  object-fit: contain;
+  border-radius: 4px;
 }
 
 .club-card-head .city {

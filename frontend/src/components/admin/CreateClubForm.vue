@@ -24,6 +24,7 @@ const newClub = ref({
   city: '',
   country: '',
   logoUrl: '',
+  color: '#2f83ab',
 })
 
 const selectedClubId = ref('')
@@ -34,6 +35,7 @@ function resetForm() {
     city: '',
     country: '',
     logoUrl: '',
+    color: '#2f83ab',
   }
 
   selectedClubId.value = ''
@@ -83,6 +85,12 @@ watch(
       <label for="clubLogoUrl"> Logo URL </label>
 
       <input id="clubLogoUrl" v-model="newClub.logoUrl" type="text" placeholder="https://..." />
+    </div>
+
+    <div class="form-group">
+      <label for="clubColor"> Color </label>
+
+      <input id="clubColor" v-model="newClub.color" type="color" />
     </div>
 
     <button type="button" class="create-button" :disabled="props.isLoading" @click="submitClub">

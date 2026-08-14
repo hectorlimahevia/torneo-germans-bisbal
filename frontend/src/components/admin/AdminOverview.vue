@@ -12,10 +12,12 @@ const props = defineProps({
     required: true,
   },
 })
+
+defineEmits(['club-color-changed'])
 </script>
 
 <template>
-  <section class="overview-card">
+  <section class="overview">
     <div class="overview-header">
       <h3>Clubs & Teams</h3>
       <p>Everything created so far in the tournament.</p>
@@ -27,6 +29,7 @@ const props = defineProps({
         :key="club.id"
         :club="club"
         :teams="teams.filter((team) => team.club?.id === club.id)"
+        @color-changed="$emit('club-color-changed', $event)"
       />
     </div>
 
@@ -35,12 +38,7 @@ const props = defineProps({
 </template>
 
 <style scoped>
-.overview-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 16px;
-  box-shadow: var(--shadow);
+.overview {
   margin-top: 20px;
 }
 

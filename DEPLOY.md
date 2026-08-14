@@ -4,20 +4,37 @@ El proyecto ya está dockerizado (`backend/Dockerfile`, `frontend/Dockerfile`, `
 
 ## Opción recomendada: Railway
 
-1. Crea una cuenta en [railway.com](https://railway.com/) y un nuevo proyecto.
-2. **Base de datos**: añade un plugin "MySQL" desde la plantilla de Railway. Railway generará automáticamente variables `MYSQLHOST`, `MYSQLPORT`, `MYSQLUSER`, `MYSQLPASSWORD`, `MYSQLDATABASE`.
-3. **Backend**: "New Service" → "Deploy from GitHub repo" → selecciona `torneo-germans-bisbal` → en "Settings" fija el **Root Directory** en `backend` (Railway detectará el `Dockerfile` automáticamente). Variables de entorno a añadir:
-   - `SPRING_DATASOURCE_URL` = `jdbc:mysql://${{MySQL.MYSQLHOST}}:${{MySQL.MYSQLPORT}}/${{MySQL.MYSQLDATABASE}}`
-   - `SPRING_DATASOURCE_USERNAME` = `${{MySQL.MYSQLUSER}}`
-   - `SPRING_DATASOURCE_PASSWORD` = `${{MySQL.MYSQLPASSWORD}}`
-   - `OPENAI_API_KEY` = (opcional)
-   - `APP_CORS_ALLOWED_ORIGINS` = la URL pública que Railway asigne al frontend (la sabrás tras el paso 4; puedes actualizarla después)
-   - `APP_JWT_SECRET` = una clave aleatoria propia de este entorno (genera una con `openssl rand -base64 48`, distinta de la que uses en local) — **obligatoria**, si no se define el backend arranca con un valor de aviso no apto para producción.
-   - `APP_COOKIE_SECURE` = `true` (Railway sirve por HTTPS, así que es el valor correcto; es también el default si no la defines).
+Sigue este orden exacto — crear los servicios en otro orden, o usar el botón de "conectar variable" automático de Railway, es la causa más común de que el backend no arranque.
+
+1. Crea una cuenta en [railway.com](https://railway.com/) y un **nuevo proyecto**.
+2. **Base de datos primero**: `+ New` → `Database` → `Add MySQL` (la plantilla oficial, no un servicio genérico). Espera a que se ponga **"Online"** antes de seguir.
+3. **Backend**: `+ New` → `GitHub Repo` → selecciona `torneo-germans-bisbal` → en **Settings → Source** fija el **Root Directory** en `backend`. Antes de dejar que despliegue, ve a **Variables** y añade estas (usa el editor de texto plano — botón **"Raw Editor"** — y pega el bloque entero; evita el asistente "Add a Variable Reference", que a veces crea variables con el nombre equivocado):
+
+   ```
+   SPRING_DATASOURCE_URL=jdbc:mysql://${{MySQL.MYSQLHOST}}:${{MySQL.MYSQLPORT}}/${{MySQL.MYSQLDATABASE}}
+   SPRING_DATASOURCE_USERNAME=${{MySQL.MYSQLUSER}}
+   SPRING_DATASOURCE_PASSWORD=${{MySQL.MYSQLPASSWORD}}
+   APP_JWT_SECRET=
+   APP_COOKIE_SECURE=true
+   APP_CORS_ALLOWED_ORIGINS=
+   OPENAI_API_KEY=
+   ```
+
+   - `APP_JWT_SECRET`: genera una clave con `openssl rand -base64 48` — **obligatoria**, distinta de la de tu `.env` local.
+   - `APP_CORS_ALLOWED_ORIGINS`: déjala vacía por ahora, la rellenas en el paso 6.
    - Railway inyecta `PORT` automáticamente; el backend ya lo respeta (`server.port: ${PORT:8080}`).
-4. **Frontend**: "New Service" → mismo repo → **Root Directory** en `frontend`. Antes de desplegar, cambia en `frontend/docker/nginx.conf` la línea `proxy_pass http://backend:8080/api/;` por la URL pública del servicio backend de Railway (te la da Railway al desplegarlo), o usa una variable de red interna de Railway si prefieres mantenerlas en el mismo proyecto privado.
-5. En cada servicio, pulsa "Generate Domain" para obtener una URL pública tipo `*.up.railway.app`.
-6. Actualiza `APP_CORS_ALLOWED_ORIGINS` en el backend con la URL final del frontend y vuelve a desplegar.
+   - Los nombres `SPRING_DATASOURCE_*` deben ser exactos — es lo único que lee Spring Boot. Si Railway te sugiere variables llamadas `MYSQLUSER`/`MYSQLPASSWORD` sueltas (sin el prefijo `SPRING_DATASOURCE_`), no sirven, bórralas.
+4. **Verifica el backend antes de seguir**: pestaña Deployments → espera a "Active" → revisa los logs y confirma la línea `Started TorneoGermansBisbalApiApplication`. No continúes al frontend hasta ver esto — así sabes en qué capa está el problema si algo falla.
+5. **Frontend**: `+ New` → `GitHub Repo` → mismo repo → **Root Directory** en `frontend`. En **Variables**, añade:
+
+   ```
+   BACKEND_HOST=${{backend.RAILWAY_PRIVATE_DOMAIN}}
+   BACKEND_PORT=8080
+   ```
+
+   (sustituye `backend` por el nombre exacto que le hayas puesto a tu servicio de backend en Railway si es distinto). El `nginx.conf` de la imagen ya está preparado para leer estas dos variables al arrancar — no hace falta tocar ningún archivo a mano.
+6. En cada servicio (backend y frontend), pestaña **Settings → Networking → Generate Domain**, para obtener una URL pública tipo `*.up.railway.app`.
+7. Copia la URL pública del **frontend** y ponla en `APP_CORS_ALLOWED_ORIGINS` del **backend** (Variables → editar). Guarda; el backend se redespliega solo.
 
 Cada push a la rama configurada en Railway (por defecto, la rama por defecto del repo) despliega automáticamente.
 

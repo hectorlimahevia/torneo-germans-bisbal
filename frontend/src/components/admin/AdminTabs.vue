@@ -16,33 +16,6 @@ const emit = defineEmits(['tab-selected'])
     <div class="admin-tabs">
       <button
         type="button"
-        :class="{ active: props.selectedTab === 'create' }"
-        @click="emit('tab-selected', 'create')"
-      >
-        <i class="fa-solid fa-calendar-days"></i>
-        Schedule
-      </button>
-
-      <button
-        type="button"
-        :class="{ active: props.selectedTab === 'update' }"
-        @click="emit('tab-selected', 'update')"
-      >
-        <i class="fa-solid fa-trophy"></i>
-        Update
-      </button>
-
-      <button
-        type="button"
-        :class="{ active: props.selectedTab === 'field' }"
-        @click="emit('tab-selected', 'field')"
-      >
-        <i class="fa-solid fa-location-dot"></i>
-        Create Field
-      </button>
-
-      <button
-        type="button"
         :class="{ active: props.selectedTab === 'club' }"
         @click="emit('tab-selected', 'club')"
       >
@@ -57,6 +30,33 @@ const emit = defineEmits(['tab-selected'])
       >
         <i class="fa-solid fa-people-group"></i>
         Create Team
+      </button>
+
+      <button
+        type="button"
+        :class="{ active: props.selectedTab === 'field' }"
+        @click="emit('tab-selected', 'field')"
+      >
+        <i class="fa-solid fa-location-dot"></i>
+        Create Field
+      </button>
+
+      <button
+        type="button"
+        :class="{ active: props.selectedTab === 'create' }"
+        @click="emit('tab-selected', 'create')"
+      >
+        <i class="fa-solid fa-calendar-days"></i>
+        Schedule
+      </button>
+
+      <button
+        type="button"
+        :class="{ active: props.selectedTab === 'update' }"
+        @click="emit('tab-selected', 'update')"
+      >
+        <i class="fa-solid fa-trophy"></i>
+        Update
       </button>
 
       <button

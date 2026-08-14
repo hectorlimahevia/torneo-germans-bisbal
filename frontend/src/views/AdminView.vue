@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue'
 import api from '@/api/api'
 
 import AdminStats from '@/components/admin/AdminStats.vue'
+import AdminOverview from '@/components/admin/AdminOverview.vue'
 import AdminTabs from '@/components/admin/AdminTabs.vue'
 import ScheduleMatchForm from '@/components/admin/ScheduleMatchForm.vue'
 import UpdateMatchForm from '@/components/admin/UpdateMatchForm.vue'
@@ -26,7 +27,7 @@ const updateResetKey = ref(0)
 const fieldResetKey = ref(0)
 const clubResetKey = ref(0)
 const teamResetKey = ref(0)
-const selectedAdminTab = ref('create')
+const selectedAdminTab = ref('club')
 
 const loading = ref({
   createMatch: false,
@@ -405,6 +406,8 @@ onMounted(loadData)
       />
 
       <AdminChart :matches="matches" />
+
+      <AdminOverview :clubs="clubs" :teams="teams" />
 
       <AdminTabs :selected-tab="selectedAdminTab" @tab-selected="selectedAdminTab = $event" />
 

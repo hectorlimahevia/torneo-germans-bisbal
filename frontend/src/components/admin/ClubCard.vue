@@ -96,18 +96,19 @@ function toggle() {
         />
       </div>
 
-      <div>
-        <h4>
-          <img
-            v-if="club.logoUrl && !logoFailed"
-            :src="club.logoUrl"
-            :alt="club.name"
-            class="mini-logo"
-            @error="logoFailed = true"
-          />
-          {{ club.name }}
-        </h4>
-        <p class="city">{{ club.city }}</p>
+      <div class="club-card-title">
+        <img
+          v-if="club.logoUrl && !logoFailed"
+          :src="club.logoUrl"
+          :alt="club.name"
+          class="mini-logo"
+          @error="logoFailed = true"
+        />
+
+        <div>
+          <h4>{{ club.name }}</h4>
+          <p class="city">{{ club.city }}</p>
+        </div>
       </div>
     </div>
 
@@ -220,24 +221,25 @@ function toggle() {
   pointer-events: none;
 }
 
-.club-card-head h4 {
+.club-card-title {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
+}
 
+.club-card-head h4 {
   margin: 0;
-
   color: var(--text-primary);
   font-size: 1.05rem;
 }
 
 .mini-logo {
-  width: 20px;
-  height: 20px;
+  width: 38px;
+  height: 38px;
   flex-shrink: 0;
 
   object-fit: contain;
-  border-radius: 4px;
+  border-radius: 6px;
 }
 
 .club-card-head .city {

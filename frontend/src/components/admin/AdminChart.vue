@@ -10,6 +10,13 @@ const props = defineProps({
 
 const categories = ['SUB6', 'SUB8', 'SUB10', 'SUB12']
 
+const CATEGORY_COLORS = {
+  SUB6: 'var(--primary-light)',
+  SUB8: 'var(--pitch)',
+  SUB10: 'var(--primary)',
+  SUB12: 'var(--primary-dark)',
+}
+
 const counts = computed(() => {
   const result = {}
 
@@ -31,7 +38,12 @@ const leader = computed(() => {
     return null
   }
 
-  return withMatches.reduce((a, b) => (counts.value[b] > counts.value[a] ? b : a))
+  const topCount = Math.max(...withMatches.map((category) => counts.value[category]))
+  const topCategories = withMatches.filter((category) => counts.value[category] === topCount)
+
+  // A tie for first place keeps every category on its own color — only a
+  // sole leader gets the gold highlight.
+  return topCategories.length === 1 ? topCategories[0] : null
 })
 
 const totalMatches = computed(() => props.matches.length)
@@ -65,6 +77,10 @@ onMounted(() => {
 function ringOffset(cat) {
   return animated.value ? C - C * (counts.value[cat] / max.value) : C
 }
+
+function ringColor(cat) {
+  return cat === leader.value ? undefined : CATEGORY_COLORS[cat]
+}
 </script>
 
 <template>
@@ -94,7 +110,7 @@ function ringOffset(cat) {
             cy="43"
             :r="R"
             :stroke-dasharray="C"
-            :style="{ strokeDashoffset: ringOffset(cat) }"
+            :style="{ strokeDashoffset: ringOffset(cat), stroke: ringColor(cat) }"
           />
         </svg>
 
@@ -109,6 +125,9 @@ function ringOffset(cat) {
     <p v-if="leader" class="leader-caption">
       <strong>{{ leader }}</strong> concentra el {{ leaderPct }}% de los partidos programados
       hasta ahora.
+    </p>
+    <p v-else-if="totalMatches > 0" class="leader-caption empty">
+      Varias categorías van igualadas en partidos programados.
     </p>
     <p v-else class="leader-caption empty">Todavía no hay partidos programados.</p>
 

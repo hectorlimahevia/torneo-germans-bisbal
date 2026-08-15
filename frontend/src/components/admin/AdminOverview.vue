@@ -1,4 +1,5 @@
 <script setup>
+import { ref } from 'vue'
 import ClubCard from '@/components/admin/ClubCard.vue'
 
 const props = defineProps({
@@ -14,6 +15,12 @@ const props = defineProps({
 })
 
 defineEmits(['club-color-changed'])
+
+const openClubId = ref(null)
+
+function toggleClub(clubId) {
+  openClubId.value = openClubId.value === clubId ? null : clubId
+}
 </script>
 
 <template>
@@ -29,6 +36,8 @@ defineEmits(['club-color-changed'])
         :key="club.id"
         :club="club"
         :teams="teams.filter((team) => team.club?.id === club.id)"
+        :is-open="openClubId === club.id"
+        @toggle="toggleClub(club.id)"
         @color-changed="$emit('club-color-changed', $event)"
       />
     </div>

@@ -90,7 +90,7 @@ watch(
     <div class="form-group">
       <label for="clubColor"> Color </label>
 
-      <input id="clubColor" v-model="newClub.color" type="color" />
+      <input id="clubColor" v-model="newClub.color" type="color" class="color-swatch-input" />
     </div>
 
     <button type="button" class="create-button" :disabled="props.isLoading" @click="submitClub">
@@ -118,5 +118,10 @@ watch(
 </template>
 
 <style scoped>
-
+.color-swatch-input {
+  width: 64px !important;
+  height: 42px;
+  padding: 4px !important;
+  cursor: pointer;
+}
 </style>

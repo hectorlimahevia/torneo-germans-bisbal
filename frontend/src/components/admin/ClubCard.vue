@@ -10,11 +10,14 @@ const props = defineProps({
     type: Array,
     required: true,
   },
+  isOpen: {
+    type: Boolean,
+    default: false,
+  },
 })
 
-const emit = defineEmits(['color-changed'])
+const emit = defineEmits(['color-changed', 'toggle'])
 
-const isOpen = ref(false)
 const logoFailed = ref(false)
 const colorInput = ref(null)
 
@@ -68,7 +71,7 @@ const initials = computed(() => {
 const categoriesCount = computed(() => new Set(props.teams.map((team) => team.category)).size)
 
 function toggle() {
-  isOpen.value = !isOpen.value
+  emit('toggle')
 }
 </script>
 

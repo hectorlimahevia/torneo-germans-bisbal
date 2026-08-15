@@ -10,9 +10,6 @@ import java.util.Collection;
 
 import static jakarta.persistence.FetchType.EAGER;
 
-/**
- * Entity class for representing a User in the database
- */
 @Entity
 @Data
 @NoArgsConstructor

@@ -21,7 +21,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import static org.springframework.http.HttpMethod.*;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
-//imports necesarios para conectar el front con el back
 import org.springframework.security.config.Customizer;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -29,19 +28,13 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
-/**
- * This is the main configuration class for security in the application. It enables web security,
- * sets up the password encoder, and sets up the security filter chain.
- */
 @Configuration
-@EnableWebSecurity // indicates it is a security config class using spring web security
+@EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    // UserDetailsService is an interface provided by Spring Security that defines a way to retrieve user information
     private final UserDetailsService userDetailsService;
 
-    // Autowired instance of the AuthenticationManagerBuilder (provided by Spring Security)
     private final AuthenticationManagerBuilder authManagerBuilder;
 
     // Comma-separated list of origins allowed to call the API, configurable via app.cors.allowed-origins
@@ -61,31 +54,15 @@ public class SecurityConfig {
     private boolean cookieSecure;
 
 
-    /**
-     * Bean definition for AuthenticationManager
-     *
-     * @param authenticationConfiguration the instance of AuthenticationConfiguration
-     * @return an instance of the AuthenticationManager
-     * @throws Exception if there is an issue getting the instance of the AuthenticationManager
-     */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
-    /**
-     * Bean definition for SecurityFilterChain
-     *
-     * @param http the instance of HttpSecurity
-     * @return an instance of the SecurityFilterChain
-     * @throws Exception if there is an issue building the SecurityFilterChain
-     */
     @Bean
     protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        // CustomAuthenticationFilter instance created
         CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(authManagerBuilder.getOrBuild(), jwtService, refreshTokenService, userRepository, cookieSecure);
 
-        // set the URL that the filter should process
         customAuthenticationFilter.setFilterProcessesUrl("/api/login");
 
 
@@ -95,7 +72,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(STATELESS))
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/api/login/**").permitAll()// public endpoint, we could add more if we wanted to
+                        .requestMatchers("/api/login/**").permitAll()
                         .requestMatchers(POST, "/api/register").permitAll()
                         .requestMatchers(POST, "/api/refresh").permitAll()
                         .requestMatchers(POST, "/api/logout").permitAll()
@@ -136,15 +113,12 @@ public class SecurityConfig {
                         .requestMatchers(DELETE, "/api/rules/**").hasAnyAuthority("ROLE_ADMIN")
 
                         .requestMatchers(GET, "/api/ai/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
-                        .anyRequest().authenticated()); // any other endpoints require authentication
+                        .anyRequest().authenticated());
 
-        // add the custom authentication filter to the http security object
         http.addFilter(customAuthenticationFilter);
 
-        // Add the custom authorization filter before the standard authentication filter.
         http.addFilterBefore(new CustomAuthorizationFilter(jwtSecret), UsernamePasswordAuthenticationFilter.class);
 
-        // Build the security filter chain to be returned.
         return http.build();
     }
 

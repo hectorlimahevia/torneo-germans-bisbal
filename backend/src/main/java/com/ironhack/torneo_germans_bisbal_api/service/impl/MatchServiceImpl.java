@@ -37,7 +37,6 @@ class MatchServiceImpl implements MatchService {
                 .orElseThrow(() -> new ResourceNotFoundException("Match not found with id: " + id));
     }
 
-    //metodo usando el dto
     @Override
     public MatchResponseDTO createMatch(MatchRequestDTO dto) {
 
@@ -58,7 +57,6 @@ class MatchServiceImpl implements MatchService {
         validateTime(dto);
         validateAvailability(dto, localTeam, visitorTeam, field);
 
-        //creando el partido
         Match match = Match.builder()
                 .localTeam(localTeam)
                 .visitorTeam(visitorTeam)
@@ -144,7 +142,6 @@ class MatchServiceImpl implements MatchService {
         matchRepository.deleteById(id);
     }
 
-    /**********************************metodos privados************************/
     private void validateTeams(Team localTeam, Team visitorTeam) {
         if (localTeam.getId().equals(visitorTeam.getId())) {
             throw new IllegalArgumentException("A team cannot play against itself");

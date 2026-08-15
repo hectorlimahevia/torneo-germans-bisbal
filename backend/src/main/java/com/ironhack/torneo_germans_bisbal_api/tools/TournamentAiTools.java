@@ -27,7 +27,6 @@ public class TournamentAiTools {
     private final TeamRepository teamRepository;
     private final ClubService clubService;
 
-    //herramienta para listar los clubs
     @Tool(description = """
             Get the full list of clubs participating in the tournament.
             A club is the organization/entity (e.g. "UE Santboiana"), NOT the same
@@ -47,14 +46,12 @@ public class TournamentAiTools {
                 .toList();
     }
 
-    //herramienta para obtener las reglas
     @Tool(description = "Get all tournament rules")
     public List<Rule> getRules() {
 
         return ruleService.getAllRules();
     }
 
-    //Herramienta para saber la clasificacion
     @Tool(description = """
             Get the standings table for a rugby category.
             Use this tool when the user asks about rankings,
@@ -64,7 +61,6 @@ public class TournamentAiTools {
         return standingService.getStandingsByCategory(category);
     }
 
-    //herramienta para partidos por categoria
     @Tool(description = """
             Get all rugby matches for a specific category.
             Use this tool when the user asks about fixtures,
@@ -89,7 +85,6 @@ public class TournamentAiTools {
                 .toList();
     }
 
-    //herramienta para informacion de equipos
     @Tool(description = """
             Get information about a rugby team by name.
             Use this tool when the user asks about a team,

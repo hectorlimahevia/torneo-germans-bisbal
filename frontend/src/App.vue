@@ -141,8 +141,6 @@ async function handleLogout() {
   padding-bottom: 10px;
 }
 
-/* ---------- Top navbar ---------- */
-
 .app-header {
   position: sticky;
   top: 0;
@@ -316,8 +314,6 @@ async function handleLogout() {
   margin-top: 4px;
   opacity: 0.7;
 }
-
-/* ---------- Desktop ---------- */
 
 @media (min-width: 992px) {
   .brand-name {

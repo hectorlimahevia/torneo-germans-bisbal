@@ -15,7 +15,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 import com.fasterxml.jackson.databind.ObjectMapper;
-//import tools.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -28,11 +27,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
-/**
- * CustomAuthorizationFilter is an implementation of OncePerRequestFilter to handle
- * authorization of a user to access the API endpoints.
- */
-@Slf4j // (Simple Logging Facade for Java) offers logging API which is more professional that simply sout
+@Slf4j
 public class CustomAuthorizationFilter extends OncePerRequestFilter {
 
     private final String jwtSecret;
@@ -41,18 +36,8 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
         this.jwtSecret = jwtSecret;
     }
 
-    /**
-     * The method doFilterInternal will handle the authorization of a user to access the API endpoints.
-     *
-     * @param request     HttpServletRequest
-     * @param response    HttpServletResponse
-     * @param filterChain FilterChain
-     * @throws ServletException if there is a servlet related error
-     * @throws IOException      if there is an Input/Output error
-     */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        // If the request is for the API Login endpoint, pass the request to the next filter in the chain
 
         log.info("Authorization filter called for path: {}", request.getServletPath());
 
@@ -61,19 +46,15 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
                 || request.getServletPath().equals("/api/logout")) {
             filterChain.doFilter(request, response);
         } else {
-            // If the request is not for the API Login endpoint, check if the request has the authorization header
             String authorizationHeader = request.getHeader(AUTHORIZATION);
             if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
                 try {
-                    // If the authorization header is present, get the token
                     String token = authorizationHeader.substring("Bearer ".length());
                     Algorithm algorithm = Algorithm.HMAC256(jwtSecret.getBytes());
                     JWTVerifier verifier = JWT.require(algorithm).build();
 
-                    // Verify the token using HMAC256
                     DecodedJWT decodedJWT = verifier.verify(token);
 
-                    // Obtain user's name and roles from token
                     String username = decodedJWT.getSubject();
                     String[] roles = decodedJWT.getClaim("roles").asArray(String.class);
                     Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
@@ -81,14 +62,12 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
                         authorities.add(new SimpleGrantedAuthority(role));
                     });
 
-                    // Create a new authentication token with the user's details and authorities and set it in the Security Context
                     UsernamePasswordAuthenticationToken authenticationToken =
                             new UsernamePasswordAuthenticationToken(username, null, authorities);
                     SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                 } catch (JWTVerificationException exception) {
                     log.error("Error logging in: {}", exception.getMessage());
 
-                    // If an error occurs during the authorization process, set the error message in the response header and return a Forbidden error status
                     response.setHeader("error", exception.getMessage());
                     response.setStatus(FORBIDDEN.value());
                     Map<String, String> error = new HashMap<>();
@@ -104,8 +83,6 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
                 filterChain.doFilter(request, response);
 
             } else {
-                // If the header does not contain "Bearer" or the header is null, then continue with the filter chain.
-                // for example for public endpoints, initial requests...
                 filterChain.doFilter(request, response);
             }
         }

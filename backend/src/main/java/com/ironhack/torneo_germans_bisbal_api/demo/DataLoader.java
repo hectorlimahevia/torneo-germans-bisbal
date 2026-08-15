@@ -40,15 +40,12 @@ public class DataLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        //protegiendo el dataloader de duplicados
         if (clubRepository.count() > 0) {
             return;
         }
-        // ROLES
         roleService.save(new Role("ROLE_USER"));
         roleService.save(new Role("ROLE_ADMIN"));
 
-        // USERS
         userService.saveUser(new User("John Doe", "john", "1234"));
         userService.saveUser(new User("James Smith", "james", "1234"));
         userService.saveUser(new User("Jane Carry", "jane", "1234"));
@@ -60,7 +57,6 @@ public class DataLoader implements CommandLineRunner {
         roleService.addRoleToUser("chris", "ROLE_ADMIN");
         roleService.addRoleToUser("chris", "ROLE_USER");
 
-        // CLUBS
         Club ues = clubRepository.save(new Club(
                 null,
                 "UE Santboiana",
@@ -88,7 +84,6 @@ public class DataLoader implements CommandLineRunner {
                 "#1b6b45"
         ));
 
-        // FIELDS
         Field field1 = fieldRepository.save(
                 new Field(null, "Field 1", "UES Rugby Complex"));
 
@@ -102,7 +97,6 @@ public class DataLoader implements CommandLineRunner {
                 new Field(null, "Field 4", "UES Rugby Complex"));
 
 
-// TEAMS
         Team uesSub6 = teamRepository.save(
                 new Team(null, "UES SUB6", Category.SUB6, ues));
 
@@ -127,7 +121,6 @@ public class DataLoader implements CommandLineRunner {
         Team geiegSub10 = teamRepository.save(
                 new Team(null, "GEiEG SUB10", Category.SUB10, geieg));
 
-        //Matches
         matchRepository.save(
                 Match.builder()
                         .localTeam(uesSub10)
@@ -172,9 +165,6 @@ public class DataLoader implements CommandLineRunner {
                         .roundNumber(1)
                         .build()
         );
-
-        //Rules
-        // RULES
 
         ruleRepository.save(
                 new ScoringRule(

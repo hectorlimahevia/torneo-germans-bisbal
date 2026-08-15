@@ -21,11 +21,6 @@ public class UserController {
     private final UserService userService;
     private final RoleService roleService;
 
-    /**
-     * Get a list of all users
-     *
-     * @return list of all users
-     */
     @GetMapping("/users")
     @ResponseStatus(HttpStatus.OK)
     public List<UserResponseDTO> getUsers() {
@@ -43,11 +38,6 @@ public class UserController {
                 .toList();
     }
 
-    /**
-     * Save a new user
-     *
-     * @param user the user to be saved
-     */
     @PostMapping("/users")
     @ResponseStatus(HttpStatus.CREATED)
     public void saveUser(@RequestBody User user) {

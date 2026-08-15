@@ -397,8 +397,6 @@ onMounted(loadHomeData)
   font-size: 0.9rem;
 }
 
-/* poster-section */
-
 .poster-section {
   display: flex;
   justify-content: center;
@@ -411,8 +409,6 @@ onMounted(loadHomeData)
   box-shadow: var(--shadow);
   border: 1px solid var(--border);
 }
-
-/* about-section  */
 
 .about-section {
   margin-top: 3rem;
@@ -431,8 +427,6 @@ onMounted(loadHomeData)
 
   color: var(--text-secondary);
 }
-
-/* sponsors-section  */
 
 .sponsors-section h2 {
   color: var(--primary);

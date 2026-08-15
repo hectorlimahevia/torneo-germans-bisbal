@@ -15,25 +15,21 @@ public class ClubServiceImpl implements ClubService {
 
     private final ClubRepository clubRepository;
 
-    //obtener todos los clubs
     @Override
     public List<Club> getAllClubs(){
         return clubRepository.findAll();
     }
 
-    //Obtenr club por id
     public Club getClubById(Long id){
         return clubRepository.findById(id)
                 .orElseThrow(()-> new ResourceNotFoundException("Club not found with id: " + id));
     }
 
-    //Crear un nuevo club
     @Override
     public Club createClub(Club club) {
         return clubRepository.save(club);
     }
 
-    //Modificar club
     @Override
     public Club updateClub(Long id, Club club ){
         Club existingClub = getClubById(id);
@@ -47,7 +43,6 @@ public class ClubServiceImpl implements ClubService {
         return clubRepository.save(existingClub);
     }
 
-    //Eliminar club
     @Override
     public void deleteClub(Long id){
         getClubById(id);

@@ -119,7 +119,6 @@ public class StandingServiceImpl implements StandingService {
             standings.add(standing);
         }
 
-        //Ordenando standing por puntuacion
         standings.sort(
                 Comparator.comparingInt(StandingResponseDTO::getTotalPoints)
                         .thenComparingInt(StandingResponseDTO::getTriesDifference)

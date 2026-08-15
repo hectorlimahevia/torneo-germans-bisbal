@@ -5,7 +5,6 @@ import com.ironhack.torneo_germans_bisbal_api.model.entity.Club;
 import java.util.List;
 
 public interface ClubService {
-    //operaciones necesarias para club
 
     List<Club> getAllClubs();
 

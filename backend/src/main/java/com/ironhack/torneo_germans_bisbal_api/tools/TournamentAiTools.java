@@ -3,6 +3,7 @@ package com.ironhack.torneo_germans_bisbal_api.tools;
 import com.ironhack.torneo_germans_bisbal_api.dto.StandingResponseDTO;
 import com.ironhack.torneo_germans_bisbal_api.model.entity.Rule;
 import com.ironhack.torneo_germans_bisbal_api.model.enums.Category;
+import com.ironhack.torneo_germans_bisbal_api.service.ClubService;
 import com.ironhack.torneo_germans_bisbal_api.service.RuleService;
 import com.ironhack.torneo_germans_bisbal_api.service.StandingService;
 import com.ironhack.torneo_germans_bisbal_api.model.entity.Match;
@@ -24,7 +25,27 @@ public class TournamentAiTools {
     private final StandingService standingService;
     private final MatchRepository matchRepository;
     private final TeamRepository teamRepository;
+    private final ClubService clubService;
 
+    //herramienta para listar los clubs
+    @Tool(description = """
+            Get the full list of clubs participating in the tournament.
+            A club is the organization/entity (e.g. "UE Santboiana"), NOT the same
+            as a team: each club can have several teams, one per age category
+            (SUB6, SUB8, SUB10, SUB12). Use this tool when the user asks how many
+            clubs participate, for the names of the clubs, or for a club's city
+            or country. Do not use team counts to answer club questions.
+            """)
+    public List<String> getAllClubs() {
+        return clubService.getAllClubs()
+                .stream()
+                .map(club ->
+                        "Club: " + club.getName() +
+                                ", city: " + club.getCity() +
+                                ", country: " + club.getCountry()
+                )
+                .toList();
+    }
 
     //herramienta para obtener las reglas
     @Tool(description = "Get all tournament rules")

@@ -59,17 +59,27 @@ public class AiServiceImpl implements AiService {
                         Available tools:
                         - Tournament rules.
                         - Standings.
+                        - Clubs.
                         - Teams.
                         - Match schedules.
                         - Match results.
-                        
+
+                        TERMINOLOGY — do not confuse these two:
+                        - A "club" (or "club/entidad") is the organization, e.g. "UE Santboiana". There are only a
+                          few clubs in the tournament.
+                        - A "team" (or "equipo") is one squad of a club in a single age category
+                          (SUB6, SUB8, SUB10, SUB12). One club can have several teams.
+                        Never use a team count or a per-category team breakdown to answer a question about clubs,
+                        and never use the club list to answer a question about teams.
+
                         Never answer questions about tournament data from your own knowledge.
                         Always consult the available tools first.
-                        
+
                         If the user asks about:
                         - standings, rankings or leaders → use the standings tool.
                         - schedules, fixtures or match times → use the schedule tool.
                         - tournament rules or scoring → use the rules tool.
+                        - clubs, how many clubs, or club names → use the clubs tool.
                         
                         If the user asks about sports unrelated to rugby,
                         politely explain that this assistant specializes in the Torneo Germans Bisbal UES rugby tournament.

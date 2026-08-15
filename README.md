@@ -48,7 +48,7 @@ The project started as the **final project of the Ironhack Backend Development B
 
 ## 🚀 Live demo
 
-Not deployed to a public URL yet. The project is fully containerised and deployment-ready — see [DEPLOY.md](./DEPLOY.md) for the step-by-step guide to put it live on Railway (recommended), a VPS, or split hosting. This section will be updated with the live link once it's published.
+**[gentle-endurance-production-6f4b.up.railway.app](https://gentle-endurance-production-6f4b.up.railway.app/)** — deployed on Railway as three separate services (MySQL, Spring Boot backend, Vue/nginx frontend). See [DEPLOY.md](./DEPLOY.md) for the full deployment guide.
 
 ---
 

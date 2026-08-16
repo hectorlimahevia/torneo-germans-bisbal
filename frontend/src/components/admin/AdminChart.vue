@@ -167,7 +167,8 @@ function ringColor(cat) {
   flex-wrap: wrap;
   justify-content: space-around;
   align-items: flex-end;
-  gap: 12px;
+  column-gap: 12px;
+  row-gap: 46px;
 
   padding: 26px 22px 28px;
 }
@@ -183,6 +184,7 @@ function ringColor(cat) {
 
 .ring-item.leader {
   transform: scale(1.14);
+  transform-origin: bottom center;
 }
 
 .ring-item svg {

@@ -37,7 +37,6 @@ The project started as the **final project of the Ironhack Backend Development B
 - [API overview](#-api-overview)
 - [Security](#-security)
 - [Database](#-database)
-- [Screenshots](#-screenshots)
 - [Installation](#-installation)
 - [Configuration](#-configuration)
 - [Deployment](#-deployment)
@@ -48,17 +47,17 @@ The project started as the **final project of the Ironhack Backend Development B
 
 ## 🚀 Live demo
 
-Not deployed to a public URL yet. The project is fully containerised and deployment-ready — see [DEPLOY.md](./DEPLOY.md) for the step-by-step guide to put it live on Railway (recommended), a VPS, or split hosting. This section will be updated with the live link once it's published.
+**[gentle-endurance-production-6f4b.up.railway.app](https://gentle-endurance-production-6f4b.up.railway.app/)** — deployed on Railway, following the guide in [DEPLOY.md](./DEPLOY.md).
 
 ---
 
 ## 📸 Preview
 
 <p align="center">
-    <img src="docs/images/hero_banner.png" width="950" alt="Torneo Germans Bisbal home page">
+    <img src="docs/images/demo.gif" width="950" alt="Walkthrough of Torneo Germans Bisbal: public pages, admin login and admin dashboard">
 </p>
 
-<p align="center"><sub>Screenshot from an earlier visual iteration — see <a href="#-screenshots">Screenshots</a> for the up-to-date gallery.</sub></p>
+<p align="center"><sub>Public navigation (standings, matches, teams, rules) followed by an admin login and the admin dashboard.</sub></p>
 
 ---
 
@@ -246,25 +245,6 @@ MySQL 8 with Spring Data JPA / Hibernate (`ddl-auto: update`). Notable design de
 <p align="center">
     <img src="backend/docs/images/diagrama_de_clases.png" width="600" alt="Rule inheritance class diagram">
 </p>
-
----
-
-## 📸 Screenshots
-
-The screenshots below reflect the app **before** the latest visual redesign (new navbar, colour system and layout). They'll be swapped for up-to-date captures — if you're picking this repo back up, running the app locally (see [Installation](#-installation)) and dropping new PNGs at the paths below is all that's needed for this gallery to update itself:
-
-| Page                  | File                                  | Status              |
-| --------------------- | -------------------------------------- | -------------------- |
-| Home                  | `docs/images/home.png`                | ⏳ pending capture    |
-| Login                 | `docs/images/login.png`               | ⏳ pending capture    |
-| Register              | `docs/images/register.png`            | ⏳ pending capture    |
-| Teams                 | `docs/images/teams.png`               | ⏳ pending capture    |
-| Matches               | `docs/images/matches.png`             | ⏳ pending capture    |
-| Standings             | `docs/images/standings.png`           | ⏳ pending capture    |
-| Rules                 | `docs/images/rules.png`               | ⏳ pending capture    |
-| Admin dashboard       | `docs/images/admin-dashboard.png`     | ⏳ pending capture    |
-| User management       | `docs/images/admin-users.png`         | ⏳ pending capture    |
-| AI Assistant          | `docs/images/ai_assistant.png`        | ✅ available (pre-redesign) |
 
 ---
 

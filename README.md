@@ -55,10 +55,10 @@ The project started as the **final project of the Ironhack Backend Development B
 ## 📸 Preview
 
 <p align="center">
-    <img src="docs/images/home.png" width="950" alt="Torneo Germans Bisbal home page">
+    <img src="docs/images/demo.gif" width="950" alt="Walkthrough of Torneo Germans Bisbal: public pages, admin login and admin dashboard">
 </p>
 
-<p align="center"><sub>See the <a href="#-screenshots">Screenshots</a> section below for the full gallery.</sub></p>
+<p align="center"><sub>Live navigation demo — see the <a href="#-screenshots">Screenshots</a> section below for a static, page-by-page gallery.</sub></p>
 
 ---
 
